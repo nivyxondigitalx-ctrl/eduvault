@@ -1,0 +1,300 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider   = "prisma-client-js"
+  output     = "../src/generated/prisma"
+  engineType = "library"
+}
+
+generator client_default {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  passwordHash   String          @default("$2b$10$EpOefgQ0xTq.WqX6R3sEGeD1B7m2wZtUvY2y2U.hC546vS4xQx.yO") // Default mock hash
+  name           String
+  role           String          // "admin", "dealer", "student"
+  avatarUrl      String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  studentProfile StudentProfile?
+  dealerProfile  Dealer?
+  reviews        Review[]
+  orders         Order[]
+  tickets        SupportTicket[]
+  replies        SupportTicketReply[]
+  auditLogs      AuditLog[]
+}
+
+model StudentProfile {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  universityId         String
+  collegeId            String
+  courseId             String
+  departmentId         String
+  regulationId         String
+  semesterId           String
+  savedMaterialIds     String   @default("[]") // JSON string array
+  unlockedMaterialIds  String   @default("[]") // JSON string array for ad unlocks
+  adUnlocksCountToday  Int      @default(0)
+  lastAdUnlockDate     String?
+  isSubscribed         Boolean  @default(false)
+  subscriptionPlanId   String?
+  subscriptionExpiresAt String?
+}
+
+model Dealer {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                 String
+  email                String
+  phone                String
+  collegeIds           String   @default("[]") // JSON string array of colleges they manage
+  commissionPercentage Float    @default(70.0)
+  status               String   @default("pending") // "pending", "approved", "suspended"
+  verificationStatus   String   @default("unverified") // "unverified", "pending", "verified"
+  panNumber            String?
+  gstNumber            String?
+  bankAccountName      String?
+  bankAccountNumber    String?
+  bankIfsc             String?
+  upiId                String?
+  totalSales           Float    @default(0.0)
+  netEarnings          Float    @default(0.0)
+  availableBalance     Float    @default(0.0)
+  payoutBalance        Float    @default(0.0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  materials            Material[]
+  ledgerEntries        LedgerEntry[]
+  payouts              Payout[]
+}
+
+model University {
+  id     String @id @default(uuid())
+  name   String
+  code   String @unique
+  status String @default("active")
+}
+
+model College {
+  id           String @id @default(uuid())
+  universityId String
+  name         String
+  code         String @unique
+  status       String @default("active")
+}
+
+model Course {
+  id     String @id @default(uuid())
+  name   String
+  status String @default("active")
+}
+
+model Department {
+  id       String @id @default(uuid())
+  courseId String
+  name     String
+  code     String @unique
+  status   String @default("active")
+}
+
+model Regulation {
+  id     String @id @default(uuid())
+  year   String
+  status String @default("active")
+}
+
+model Semester {
+  id   String @id // e.g. "sem-1"
+  name String
+}
+
+model Subject {
+  id           String @id @default(uuid())
+  departmentId String
+  semesterId   String
+  name         String
+  code         String
+  status       String @default("active")
+}
+
+model Material {
+  id                   String   @id @default(uuid())
+  slug                 String   @unique
+  title                String
+  description          String
+  universityId         String
+  collegeId            String
+  courseId             String
+  departmentId         String
+  regulationId         String
+  semesterId           String
+  subjectId            String
+  subjectCode          String
+  category             String   // "study_material", "notes", etc.
+  examType             String   // "internal", "model", "practical", "university"
+  examMonth            String
+  examYear             String
+  language             String   @default("English")
+  pageCount            Int      @default(1)
+  fileSize             String   @default("0.5 MB")
+  filePath             String   @default("/uploads/sample.pdf")
+  thumbnailStyle       String   @default("from-indigo-600 to-indigo-800")
+  previewPageCount     Int      @default(1)
+  price                Float    @default(0.0)
+  discount             Float    @default(0.0)
+  accessModes          String   @default("[\"free\"]") // JSON string array
+  subscriptionEligible Boolean  @default(true)
+  rating               Float    @default(5.0)
+  reviewCount          Int      @default(0)
+  downloadCount        Int      @default(0)
+  status               String   @default("pending") // "draft", "pending", "approved", "rejected", "suspended"
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  tags                 String   @default("[]") // JSON string array
+  includesAnswerKey    Boolean  @default(false)
+
+  dealerId             String
+  dealer               Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  reviews              Review[]
+  orderItems           OrderItem[]
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating     Int
+  comment    String
+  createdAt  DateTime @default(now())
+}
+
+model Order {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderNumber   String   @unique
+  subtotal      Float
+  tax           Float
+  discount      Float
+  total         Float
+  paymentStatus String   // "pending", "completed", "failed"
+  paymentMethod String   // "UPI", "Card", "Net Banking", "Wallet"
+  couponCode    String?
+  createdAt     DateTime @default(now())
+
+  items         OrderItem[]
+  ledgerEntries LedgerEntry[]
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  price      Float
+  discount   Float
+}
+
+model LedgerEntry {
+  id           String   @id @default(uuid())
+  orderId      String?
+  order        Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  dealerId     String
+  dealer       Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  amount       Float
+  type         String   // "sale", "refund", "gateway_fee", "subscription_share", "adjustment", "payout"
+  description  String
+  createdAt    DateTime @default(now())
+}
+
+model Payout {
+  id            String   @id @default(uuid())
+  dealerId      String
+  dealer        Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  amount        Float
+  method        String   // "Bank Transfer", "UPI"
+  paymentDetails String
+  status        String   // "pending", "completed", "failed"
+  processedAt   DateTime?
+  createdAt     DateTime @default(now())
+}
+
+model SubscriptionPlan {
+  id                 String  @id // e.g. "plan-free", "plan-plus", "plan-exampass"
+  name               String
+  price              Float
+  durationMonths     Int
+  downloadLimit      Int
+  discountPercentage Float
+  features           String  @default("[]") // JSON string array
+  activeSubscribers  Int     @default(0)
+}
+
+model AdCampaign {
+  id               String   @id @default(uuid())
+  name             String
+  advertiser       String
+  status           String   @default("active") // "active", "paused", "completed"
+  placement        String   // "modal", "banner", "sidebar"
+  startDate        String
+  endDate          String
+  impressions      Int      @default(0)
+  completions      Int      @default(0)
+  estimatedRevenue Float    @default(0.0)
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  type      String   @default("system") // "system", "moderation", "sale", "payout"
+  createdAt DateTime @default(now())
+}
+
+model SupportTicket {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  status    String   @default("open") // "open", "resolved", "closed"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  replies   SupportTicketReply[]
+}
+
+model SupportTicketReply {
+  id        String   @id @default(uuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  details   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}

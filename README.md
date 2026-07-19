@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EduVault - Solved Question Paper & Study Material Marketplace
 
-## Getting Started
+EduVault is a premium, client-side-first educational question paper and reference keys marketplace. It is built using **Next.js 16 (App Router)** and styled using the **Tailwind CSS v4** engine.
 
-First, run the development server:
+---
+
+## 🌟 Core Features
+
+- **🎓 Educational Taxonomy Map**: Custom Anna University / Madras University classifications mapping regulations, semesters, departments, and specific subject codes.
+- **🛡️ Multi-Role Dashboard Workspaces**:
+  - **Student**: Browse materials, unlock premium files using ad views countdown simulation, make purchases, check out carts, manage billing cycles, and submit custom requests.
+  - **Dealer (Content Provider)**: Upload solved materials via a multi-step upload wizard, configure access controls, view revenue analytics, and request payouts.
+  - **Main Admin**: Platform metrics analytics (GMV, net cuts), moderate dealer uploads side-by-side with watermarked PDF previews, adjust dealer commission splits, manage taxonomy nodes, and track audit logs.
+- **⚡ Interactive Ad-Unlock Simulation**: Simulated 10-second count-down timer with daily quota checks.
+- **📄 Blurred Watermarked PDF Viewer**: Simulated watermark overlays and custom preview page bounds.
+- **🔌 Unified React State Context**: Bypasses any external database by reading/writing directly to browser `localStorage`. Exposes a global reset database button for easy test replication.
+
+---
+
+## 🚀 Getting Started
+
+No external server or database setup is required. To run the sandbox, execute:
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔑 Demo Workspace Credentials
 
-## Learn More
+Use the quick-login role shortcuts on the login page, or manually log in with:
 
-To learn more about Next.js, take a look at the following resources:
+- **Admin Console**: `admin@eduvault.demo` / Password: `Admin@123`
+- **Dealer Console**: `dealer@eduvault.demo` / Password: `Dealer@123`
+- **Student Console**: `student@eduvault.demo` / Password: `Student@123`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏗️ Architecture details
 
-## Deploy on Vercel
+- **Persistent Layer**: `src/lib/storage.ts` coordinates all reads and writes to browser `localStorage`.
+- **Global Context Provider**: `src/lib/context.tsx` handles business logic: cart calculations, payment distributions, taxonomy updates, and ticketing communication lists.
+- **Design System**: Global custom colors declared via Tailwind v4 `@theme` directives in `src/app/globals.css`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Build and Compilation Checks
+
+Validate Next.js build compilation and static page optimization with:
+
+```bash
+npm run build
+```
