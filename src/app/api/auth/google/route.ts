@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const rawClientId = process.env.GOOGLE_CLIENT_ID || "";
+  const clientId = rawClientId.trim().replace(/^["']|["']$/g, "");
+  
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes("localhost"))
-    ? process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "")
+    ? process.env.NEXT_PUBLIC_APP_URL.trim().replace(/\/$/, "")
     : req.nextUrl.origin;
   const redirectUri = `${appUrl}/api/auth/google/callback`;
+
+  console.log("[Google OAuth Init] Client ID:", clientId ? `${clientId.substring(0, 15)}...` : "MISSING", "Redirect URI:", redirectUri);
 
   if (!clientId || clientId === "your-google-client-id.apps.googleusercontent.com") {
     return NextResponse.json(

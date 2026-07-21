@@ -20,8 +20,11 @@ interface GoogleUserInfo {
 }
 
 export async function GET(req: NextRequest) {
+  const clientId = (process.env.GOOGLE_CLIENT_ID || "").trim().replace(/^["']|["']$/g, "");
+  const clientSecret = (process.env.GOOGLE_CLIENT_SECRET || "").trim().replace(/^["']|["']$/g, "");
+
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes("localhost"))
-    ? process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "")
+    ? process.env.NEXT_PUBLIC_APP_URL.trim().replace(/\/$/, "")
     : req.nextUrl.origin;
   const redirectUri = `${appUrl}/api/auth/google/callback`;
 
@@ -41,8 +44,8 @@ export async function GET(req: NextRequest) {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         code,
-        client_id: process.env.GOOGLE_CLIENT_ID!,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+        client_id: clientId,
+        client_secret: clientSecret,
         redirect_uri: redirectUri,
         grant_type: "authorization_code",
       }),
