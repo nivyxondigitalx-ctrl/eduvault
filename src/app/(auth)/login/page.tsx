@@ -234,6 +234,50 @@ function LoginContent() {
             </p>
           </div>
 
+          {/* Quick Demo Credentials Assistant */}
+          <div className="mt-6 pt-5 border-t border-slate-100 dark:border-zinc-800">
+            <div className="text-center mb-3">
+              <span className="text-[11px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
+                Quick Demo Fill
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setRole("admin");
+                  setEmail("admin@eduvault.com");
+                  setPassword("password123");
+                }}
+                className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"
+              >
+                🔑 Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRole("dealer");
+                  setEmail("dealer@eduvault.com");
+                  setPassword("password123");
+                }}
+                className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"
+              >
+                💼 Dealer
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRole("student");
+                  setEmail("student@eduvault.com");
+                  setPassword("password123");
+                }}
+                className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"
+              >
+                🎓 Student
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

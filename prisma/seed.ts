@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
+import bcrypt from "bcryptjs";
 import {
   UNIVERSITIES,
   COLLEGES,
@@ -112,13 +113,14 @@ async function main() {
   console.log("Seeded academic taxonomy.");
 
   // 5. Seed Users & Profiles
-  // Map password text to hash. For demo ease, password is "password123" for everyone.
-  // Mock hash is already defined as default in schema.prisma, so we don't strictly need to write it here.
+  // Map password text to hash. Default password is "password123" for all demo accounts.
+  const defaultPasswordHash = await bcrypt.hash("password123", 10);
   for (const u of MOCK_USERS) {
     await prisma.user.create({
       data: {
         id: u.id,
         email: u.email,
+        passwordHash: defaultPasswordHash,
         name: u.name,
         role: u.role,
         avatarUrl: u.avatarUrl,

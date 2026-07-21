@@ -253,7 +253,7 @@ export const MOCK_USERS: User[] = [
   // Admin
   {
     id: "usr-admin",
-    email: "mainadmin@gmail.com",
+    email: "admin@eduvault.com",
     name: "EduVault Admin",
     role: "admin",
     avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=admin",
@@ -262,7 +262,7 @@ export const MOCK_USERS: User[] = [
   // Dealers (5)
   {
     id: "usr-dealer-1",
-    email: "balasurya@gmail.com", // primary dealer
+    email: "dealer@eduvault.com", // primary dealer
     name: "Balasurya",
     role: "dealer",
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=balasurya",
@@ -270,7 +270,7 @@ export const MOCK_USERS: User[] = [
   },
   {
     id: "usr-dealer-2",
-    email: "nivas@gmail.com",
+    email: "dealer2@eduvault.com",
     name: "Nivas",
     role: "dealer",
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=nivas",
@@ -357,7 +357,7 @@ export const MOCK_DEALERS: Dealer[] = [
     id: "dlr-1",
     userId: "usr-dealer-1",
     name: "Balasurya",
-    email: "balasurya@gmail.com",
+    email: "dealer@eduvault.com",
     phone: "+91 98765 43210",
     collegeIds: ["coll-1", "coll-2"],
     commissionPercentage: 70,
@@ -379,7 +379,7 @@ export const MOCK_DEALERS: Dealer[] = [
     id: "dlr-2",
     userId: "usr-dealer-2",
     name: "Nivas",
-    email: "nivas@gmail.com",
+    email: "dealer2@eduvault.com",
     phone: "+91 98765 43211",
     collegeIds: ["coll-1", "coll-2"],
     commissionPercentage: 75,
