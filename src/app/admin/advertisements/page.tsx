@@ -74,7 +74,7 @@ export default function AdminAdvertisementsPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. UPSC prep mock test"
+                placeholder="e.g. UPSC prep test series"
                 className="block w-full px-3 py-2 bg-slate-50 border-0 focus:ring-2 focus:ring-indigo-500 text-slate-900 text-xs rounded-xl"
               />
             </div>

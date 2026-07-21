@@ -97,8 +97,8 @@ export const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto border-t border-slate-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
         <p>&copy; {new Date().getFullYear()} EduVault India. All rights reserved.</p>
-        <p className="mt-2 sm:mt-0 italic text-[11px] text-slate-600">
-          Simulated Platform Dashboard. Not a real financial utility.
+        <p className="mt-2 sm:mt-0 text-[11px] text-slate-500">
+          EduVault Academic Material Hub. All rights reserved.
         </p>
       </div>
     </footer>

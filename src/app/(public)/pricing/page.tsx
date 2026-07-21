@@ -41,8 +41,8 @@ export default function PricingPage() {
 
   const faqs = [
     { q: "How does the shared subscription pool work?", a: "A portion of your monthly subscription is pooled together and distributed directly to dealers and content creators based on how many unique students download their verified resources." },
-    { q: "Can I cancel my subscription anytime?", a: "Yes, you can manage and cancel your mock subscription directly from your student dashboard settings." },
-    { q: "What's the difference between ad-unlocks and subscription?", a: "Ad-unlocks require watching a simulated 10-second advertisement and only grant access for 24 hours. Subscribers get instant ad-free access to all subscription-eligible files permanently while subscribed." },
+    { q: "Can I cancel my subscription anytime?", a: "Yes, you can manage and cancel your subscription directly from your student dashboard settings." },
+    { q: "What's the difference between ad-unlocks and subscription?", a: "Ad-unlocks require watching a 10-second advertisement and grant access for 24 hours. Subscribers get instant ad-free access to all subscription-eligible files permanently while subscribed." },
   ];
 
   return (

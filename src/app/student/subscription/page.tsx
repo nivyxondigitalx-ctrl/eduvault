@@ -18,9 +18,8 @@ export default function StudentSubscriptionPage() {
   const handleCancelSubscription = () => {
     setCancelOpen(false);
     
-    // Reset subscription in student profiles mock
-    // Simply mutate or display alert
-    toast.success("Subscription cancellation request simulated. You will retain access until expiration.");
+    // Reset subscription in student profiles
+    toast.success("Subscription cancellation requested. You will retain access until expiration.");
   };
 
   return (

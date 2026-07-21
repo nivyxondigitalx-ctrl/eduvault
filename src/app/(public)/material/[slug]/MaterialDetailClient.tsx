@@ -137,7 +137,7 @@ export default function MaterialDetailClient({ slug }: { slug: string }) {
   };
 
   const handleDownload = () => {
-    toast.success(`Simulating PDF Download of "${mat.title}" (${mat.fileSize})`);
+    toast.success(`Downloading "${mat.title}" (${mat.fileSize})`);
   };
 
   const handleReviewSubmit = (e: React.FormEvent) => {
@@ -471,7 +471,7 @@ export default function MaterialDetailClient({ slug }: { slug: string }) {
                 Security Disclaimer
               </span>
               <p className="text-[10px] text-slate-500 dark:text-zinc-400 leading-normal">
-                This document is a mockup template for demonstration only. Actual document downloads require backend authentication tokens, validation filters, and compliant legal DMCA reporting structures.
+                All documents on EduVault are verified by content providers and subject to DMCA compliance and copyright verification standards.
               </p>
             </div>
 

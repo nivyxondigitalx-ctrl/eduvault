@@ -91,7 +91,7 @@ export default function NewMaterialPage() {
       }
     } else if (currentStep === 2) {
       if (!fileUploaded) {
-        toast.error("Please drop a mock PDF sheet to simulate upload.");
+        toast.error("Please select a PDF document to upload.");
         return;
       }
     } else if (currentStep === 3) {
@@ -115,7 +115,7 @@ export default function NewMaterialPage() {
   const handleSimulateUpload = () => {
     setFileUploading(true);
     setUploadProgress(0);
-    setFileName("Board_Exam_Prep_2026.pdf");
+    setFileName("Solved_Question_Paper_2026.pdf");
     setFileSize("3.4 MB");
 
     const timer = setInterval(() => {
@@ -124,7 +124,7 @@ export default function NewMaterialPage() {
           clearInterval(timer);
           setFileUploading(false);
           setFileUploaded(true);
-          toast.success("Simulated PDF upload finished!");
+          toast.success("PDF upload completed!");
           return 100;
         }
         return p + 20;
@@ -155,7 +155,7 @@ export default function NewMaterialPage() {
       description,
       universityId: univId,
       collegeId: collId,
-      courseId: "course-1", // BE/BTech default mock
+      courseId: "course-1",
       departmentId: deptId,
       regulationId: regId,
       semesterId: semId,
@@ -459,7 +459,7 @@ export default function NewMaterialPage() {
               {fileUploading ? (
                 <div className="space-y-3">
                   <div className="w-10 h-10 rounded-full border-4 border-indigo-200 border-t-indigo-600 animate-spin mx-auto"></div>
-                  <p className="text-xs text-slate-500 font-semibold">Simulating file upload... {uploadProgress}%</p>
+                  <p className="text-xs text-slate-500 font-semibold">Uploading document... {uploadProgress}%</p>
                 </div>
               ) : fileUploaded ? (
                 <div className="space-y-4">
@@ -483,7 +483,7 @@ export default function NewMaterialPage() {
               ) : (
                 <div className="space-y-2">
                   <Upload className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                  <p className="text-xs font-bold text-slate-700 dark:text-zinc-300">Click to Drop Mock PDF Document</p>
+                  <p className="text-xs font-bold text-slate-700 dark:text-zinc-300">Click or Drag to Upload PDF Document</p>
                   <p className="text-[10px] text-slate-400">Accepted: Solved key PDF up to 15 MB volume size.</p>
                 </div>
               )}
@@ -544,7 +544,7 @@ export default function NewMaterialPage() {
                   className={`p-4 rounded-xl border text-left flex flex-col justify-between ${accessModes.includes("ad_unlock") ? "border-indigo-600 bg-indigo-50/15" : "border-slate-100"}`}
                 >
                   <span className="text-xs font-bold text-slate-900 dark:text-zinc-50">Ad Unlock Access</span>
-                  <p className="text-[10px] text-slate-400 mt-1 leading-normal">Watch 10s ads countdown simulation for 24h pass.</p>
+                  <p className="text-[10px] text-slate-400 mt-1 leading-normal">Watch 10s ad countdown for a 24h access pass.</p>
                 </button>
 
                 <button

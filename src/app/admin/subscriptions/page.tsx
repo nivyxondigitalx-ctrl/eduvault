@@ -26,7 +26,7 @@ export default function AdminSubscriptionsPage() {
       name,
       price,
       durationMonths: duration,
-      downloadLimit: 100, // mock default
+      downloadLimit: 100,
       discountPercentage: discount,
       features: features.split(",").map(f => f.trim()).filter(Boolean),
       activeSubscribers: 0,

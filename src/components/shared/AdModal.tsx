@@ -61,7 +61,7 @@ export const AdModal: React.FC<AdModalProps> = ({
     const handleVisibilityChange = () => {
       if (document.hidden && stage === "playing") {
         setIsPaused(true);
-        toast.warning("Simulated Ad Paused! Please keep the tab open.");
+        toast.warning("Ad Paused! Please keep the tab open.");
       } else if (!document.hidden && stage === "playing") {
         setIsPaused(false);
       }
@@ -153,7 +153,7 @@ export const AdModal: React.FC<AdModalProps> = ({
               onClick={handleStartAd}
               className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold shadow-lg shadow-indigo-100 dark:shadow-none transition-all flex items-center justify-center gap-2"
             >
-              <Play className="w-4 h-4 fill-white" /> Start Simulated Ad
+              <Play className="w-4 h-4 fill-white" /> Watch Ad
             </button>
           </div>
         )}

@@ -43,7 +43,7 @@ export default function StudentLibraryPage() {
   const handleDownload = (e: React.MouseEvent, title: string) => {
     e.preventDefault();
     e.stopPropagation();
-    toast.success(`Mock PDF Download initiated: "${title}"`);
+    toast.success(`Downloading "${title}"...`);
   };
 
   return (

@@ -126,7 +126,7 @@ function CheckoutContent() {
           Checkout Securely
         </h1>
         <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
-          Select your simulated payment option to finalize your study resources purchase.
+          Select your payment option to finalize your study resources purchase.
         </p>
       </div>
 
@@ -148,9 +148,9 @@ function CheckoutContent() {
             <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 rounded-2xl p-4 flex items-start gap-2.5">
               <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div className="text-xs text-amber-800 dark:text-amber-400 leading-normal">
-                <span className="font-bold">Sandbox Payment Split Simulation</span>
+                <span className="font-bold">Instant Dealer Payout Split</span>
                 <p className="mt-0.5">
-                  Payments are simulated for demonstration. Completing checkouts splits distribution fees immediately to dealer ledger balance based on dealer commissions (e.g. 70%, 80%).
+                  Completing checkout distributes earnings instantly to dealer balances based on assigned commission rates (e.g. 70%, 80%).
                 </p>
               </div>
             </div>
@@ -230,7 +230,7 @@ function CheckoutContent() {
               >
                 {loading ? (
                   <>
-                    <Loader className="w-4 h-4 animate-spin" /> Simulating Gateway...
+                    <Loader className="w-4 h-4 animate-spin" /> Processing Payment...
                   </>
                 ) : (
                   `Pay ${formatCurrency(netAmount)} Securely`

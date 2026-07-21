@@ -11,7 +11,7 @@ export default function DealerEarningsPage() {
   const dealerProfile = dealers.find((d) => d.userId === currentUser?.id);
   const myLedger = ledger.filter((l) => l.dealerId === dealerProfile?.id);
 
-  // Group splits calculation simulator
+  // Split calculation breakdown
   const [testGross, setTestGross] = useState(100);
   const commPct = dealerProfile ? dealerProfile.commissionPercentage : 70;
   

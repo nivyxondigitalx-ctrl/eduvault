@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
                 Check your inbox
               </h3>
               <p className="text-xs text-slate-500 dark:text-zinc-400 leading-normal max-w-xs mx-auto">
-                We have sent a simulated password recovery code to <strong>{email}</strong>. 
+                We have sent a password recovery code to <strong>{email}</strong>. 
                 Please enter the code to reset your password.
               </p>
               <div className="pt-4">

@@ -44,7 +44,7 @@ export default function AdminTaxonomyPage() {
         return;
       }
       payload.departmentId = parentId;
-      payload.semesterId = "sem-3"; // default mock semester
+      payload.semesterId = "sem-3";
     }
 
     manageTaxonomy(activeTab, "create", payload);

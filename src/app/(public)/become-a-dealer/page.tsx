@@ -79,7 +79,7 @@ export default function BecomeADealerPage() {
             </h2>
             <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed max-w-sm mx-auto">
               Thank you for applying to become an EduVault Verified Content Provider. 
-              We have generated your demo dealer credentials. Log in using <strong>{email}</strong> once the Main Admin approves your request.
+              We have generated your dealer account credentials. Log in using <strong>{email}</strong> once the Main Admin approves your request.
             </p>
             <div className="pt-4">
               <a
