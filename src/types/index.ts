@@ -155,6 +155,7 @@ export interface Material {
   tags: string[];
   includesAnswerKey: boolean;
   fileUrl?: string; // Mock PDF path
+  filePath?: string;
 }
 
 export interface Review {

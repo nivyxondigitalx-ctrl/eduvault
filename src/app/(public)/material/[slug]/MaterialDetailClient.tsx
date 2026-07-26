@@ -138,6 +138,14 @@ export default function MaterialDetailClient({ slug }: { slug: string }) {
 
   const handleDownload = () => {
     toast.success(`Downloading "${mat.title}" (${mat.fileSize})`);
+    
+    const link = document.createElement("a");
+    link.href = mat.filePath || "/uploads/sample.pdf";
+    // Keep it as a PDF file
+    link.download = `${mat.title.replace(/[^a-zA-Z0-9.-]/g, "_")}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleReviewSubmit = (e: React.FormEvent) => {

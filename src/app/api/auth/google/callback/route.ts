@@ -31,6 +31,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
   const error = searchParams.get("error");
+  const state = searchParams.get("state") || "student";
 
   // Handle user denial
   if (error || !code) {
@@ -73,21 +74,39 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(`${appUrl}/login?error=google_unverified_email`);
     }
 
+    const emailLower = googleUser.email.toLowerCase();
+    const selectedRole = state; // "student" | "dealer" | "admin"
+
+    // Enforce authorization blocking
+    if (selectedRole === "admin" && emailLower !== "sanjaykumarvpk@gmail.com") {
+      return NextResponse.redirect(`${appUrl}/login?error=google_unauthorized_admin`);
+    }
+    if (selectedRole === "dealer" && emailLower !== "nivyxondigitalx@gmail.com") {
+      return NextResponse.redirect(`${appUrl}/login?error=google_unauthorized_dealer`);
+    }
+
+    let targetRole = "student";
+    if (emailLower === "sanjaykumarvpk@gmail.com") {
+      targetRole = "admin";
+    } else if (emailLower === "nivyxondigitalx@gmail.com") {
+      targetRole = "dealer";
+    }
+
     // 3. Find or create user in DB
     let user = await prisma.user.findUnique({
       where: { email: googleUser.email },
     });
 
     if (!user) {
-      // Create new student user from Google
+      // Create new user from Google
       user = await prisma.user.create({
         data: {
           email: googleUser.email,
           name: googleUser.name,
-          role: "student",
+          role: targetRole,
           avatarUrl: googleUser.picture,
           passwordHash: "", // No password for OAuth users
-          studentProfile: {
+          studentProfile: targetRole === "student" ? {
             create: {
               universityId: "univ-1",
               collegeId: "coll-1",
@@ -96,15 +115,61 @@ export async function GET(req: NextRequest) {
               regulationId: "reg-2",
               semesterId: "sem-1",
             }
-          }
+          } : undefined,
+          dealerProfile: targetRole === "dealer" ? {
+            create: {
+              name: googleUser.name,
+              email: googleUser.email,
+              phone: "",
+              status: "active",
+              verificationStatus: "verified",
+              collegeIds: JSON.stringify(["coll-1"]),
+            }
+          } : undefined,
         },
       });
-    } else if (!user.avatarUrl && googleUser.picture) {
-      // Update avatar if missing
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: { avatarUrl: googleUser.picture },
-      });
+    } else {
+      // If user exists, update role if needed and verify avatar
+      const updateData: any = {};
+      let needsUpdate = false;
+
+      if (!user.avatarUrl && googleUser.picture) {
+        updateData.avatarUrl = googleUser.picture;
+        needsUpdate = true;
+      }
+
+      if ((emailLower === "sanjaykumarvpk@gmail.com" && user.role !== "admin") ||
+          (emailLower === "nivyxondigitalx@gmail.com" && user.role !== "dealer")) {
+        updateData.role = targetRole;
+        needsUpdate = true;
+      }
+
+      if (needsUpdate) {
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: updateData,
+        });
+      }
+
+      // Ensure Dealer profile exists if they are dealer
+      if (user.role === "dealer") {
+        const existingDealer = await prisma.dealer.findFirst({
+          where: { userId: user.id }
+        });
+        if (!existingDealer) {
+          await prisma.dealer.create({
+            data: {
+              userId: user.id,
+              name: user.name,
+              email: user.email,
+              phone: "",
+              status: "active",
+              verificationStatus: "verified",
+              collegeIds: JSON.stringify(["coll-1"]),
+            }
+          });
+        }
+      }
     }
 
     // 4. Issue JWT token (same system as regular login)

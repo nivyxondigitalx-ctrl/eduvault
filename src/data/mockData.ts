@@ -253,7 +253,7 @@ export const MOCK_USERS: User[] = [
   // Admin
   {
     id: "usr-admin",
-    email: "admin@eduvault.com",
+    email: "sanjay@gmail.com",
     name: "EduVault Admin",
     role: "admin",
     avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=admin",
@@ -262,7 +262,7 @@ export const MOCK_USERS: User[] = [
   // Dealers (5)
   {
     id: "usr-dealer-1",
-    email: "dealer@eduvault.com", // primary dealer
+    email: "bala@gmail.com", // primary dealer
     name: "Balasurya",
     role: "dealer",
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=balasurya",
@@ -303,7 +303,7 @@ export const MOCK_USERS: User[] = [
   // Students (6, let's create more to reach 12 users total)
   {
     id: "usr-student-1",
-    email: "student@eduvault.com", // primary student
+    email: "nivas@gmail.com", // primary student
     name: "Aravind Swamy",
     role: "student",
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=aravind",
@@ -357,7 +357,7 @@ export const MOCK_DEALERS: Dealer[] = [
     id: "dlr-1",
     userId: "usr-dealer-1",
     name: "Balasurya",
-    email: "dealer@eduvault.com",
+    email: "bala@gmail.com",
     phone: "+91 98765 43210",
     collegeIds: ["coll-1", "coll-2"],
     commissionPercentage: 70,
@@ -1433,7 +1433,7 @@ export const MOCK_ORDERS: Order[] = [
     orderNumber: "EV-2025-0301-118",
     studentId: "usr-student-1",
     studentName: "Aravind Swamy",
-    studentEmail: "student@eduvault.com",
+    studentEmail: "nivas@gmail.com",
     items: [
       { materialId: "mat-1", title: "Data Structures Lecture Notes - Complete Syllabus", price: 99, discount: 19, dealerId: "dlr-1" },
     ],
@@ -1451,7 +1451,7 @@ export const MOCK_ORDERS: Order[] = [
     orderNumber: "EV-2025-0302-230",
     studentId: "usr-student-1",
     studentName: "Aravind Swamy",
-    studentEmail: "student@eduvault.com",
+    studentEmail: "nivas@gmail.com",
     items: [
       { materialId: "mat-2", title: "Anna University Data Structures Solved Previous Question Papers", price: 149, discount: 50, dealerId: "dlr-1" },
     ],
@@ -1541,7 +1541,7 @@ export const MOCK_ORDERS: Order[] = [
     orderNumber: "EV-2025-0512-321",
     studentId: "usr-student-1",
     studentName: "Aravind Swamy",
-    studentEmail: "student@eduvault.com",
+    studentEmail: "nivas@gmail.com",
     items: [
       { materialId: "mat-9", title: "Operating Systems (OS) Handcrafted Revision Guide", price: 80, discount: 10, dealerId: "dlr-2" },
     ],
@@ -1614,7 +1614,7 @@ export const MOCK_ORDERS: Order[] = [
     orderNumber: "EV-2026-0715-990",
     studentId: "usr-student-1",
     studentName: "Aravind Swamy",
-    studentEmail: "student@eduvault.com",
+    studentEmail: "nivas@gmail.com",
     items: [
       { materialId: "mat-17", title: "Design and Analysis of Algorithms Complete Lecture Notes", price: 129, discount: 30, dealerId: "dlr-1" },
     ],
@@ -1668,7 +1668,7 @@ export const MOCK_ORDERS: Order[] = [
     orderNumber: "EV-2026-0717-450",
     studentId: "usr-student-1",
     studentName: "Aravind Swamy",
-    studentEmail: "student@eduvault.com",
+    studentEmail: "nivas@gmail.com",
     items: [
       { materialId: "mat-21", title: "Java Programming Laboratory Record Manual - UNOM", price: 49, discount: 10, dealerId: "dlr-4" },
     ],
@@ -1785,7 +1785,7 @@ export const MOCK_TICKETS: SupportTicket[] = [
     userId: "usr-student-1",
     userRole: "student",
     userName: "Aravind Swamy",
-    userEmail: "student@eduvault.com",
+    userEmail: "nivas@gmail.com",
     subject: "Ad unlock showing count error",
     message: "Yesterday I unlocked two items, but today my remaining ads unlocked counter is showing 1 remaining instead of 3. Please check.",
     status: "in_progress",
@@ -1805,7 +1805,7 @@ export const MOCK_TICKETS: SupportTicket[] = [
     userId: "usr-dealer-1",
     userRole: "dealer",
     userName: "Sanjay Kumar",
-    userEmail: "dealer@eduvault.com",
+    userEmail: "bala@gmail.com",
     subject: "Bank verification pending",
     message: "I updated my GST/PAN details two days ago. Could you please verify the KYC so that I can request payouts?",
     status: "resolved",

@@ -51,6 +51,8 @@ function LoginContent() {
     else if (error === "google_unverified_email") toast.error("Your Google account email is not verified.");
     else if (error === "google_server_error") toast.error("A server error occurred with Google sign-in.");
     else if (error === "not_configured") toast.error("Google sign-in is not configured yet.");
+    else if (error === "google_unauthorized_admin") toast.error("Unauthorized: Only the assigned administrator can log in as Admin.");
+    else if (error === "google_unauthorized_dealer") toast.error("Unauthorized: Only the assigned dealer can log in as Dealer.");
   }, [searchParams]);
 
   // If already logged in, redirect to correct dashboard
@@ -81,7 +83,7 @@ function LoginContent() {
   };
 
   const handleGoogleSignIn = () => {
-    window.location.href = "/api/auth/google";
+    window.location.href = `/api/auth/google?role=${role}`;
   };
 
   return (
@@ -133,31 +135,29 @@ function LoginContent() {
             ))}
           </div>
 
-          {/* Google Sign-In Button (only for students) */}
-          {role === "student" && (
-            <>
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                className="w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-300 dark:hover:border-zinc-600 shadow-sm transition-all duration-200 hover:shadow-md group"
-                id="google-signin-btn"
-              >
-                <GoogleIcon />
-                <span>Continue with Google</span>
-              </button>
+          {/* Google Sign-In Button */}
+          <>
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              className="w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-300 dark:hover:border-zinc-600 shadow-sm transition-all duration-200 hover:shadow-md group"
+              id="google-signin-btn"
+            >
+              <GoogleIcon />
+              <span>Continue with Google</span>
+            </button>
 
-              <div className="relative my-5">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-100 dark:border-zinc-800" />
-                </div>
-                <div className="relative flex justify-center text-xs">
-                  <span className="px-3 bg-white dark:bg-zinc-900 text-slate-400 dark:text-zinc-500 font-medium">
-                    or continue with email
-                  </span>
-                </div>
+            <div className="relative my-5">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-100 dark:border-zinc-800" />
               </div>
-            </>
-          )}
+              <div className="relative flex justify-center text-xs">
+                <span className="px-3 bg-white dark:bg-zinc-900 text-slate-400 dark:text-zinc-500 font-medium">
+                  or continue with email
+                </span>
+              </div>
+            </div>
+          </>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
@@ -246,7 +246,7 @@ function LoginContent() {
                 type="button"
                 onClick={() => {
                   setRole("admin");
-                  setEmail("admin@eduvault.com");
+                  setEmail("sanjay@gmail.com");
                   setPassword("password123");
                 }}
                 className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"
@@ -257,7 +257,7 @@ function LoginContent() {
                 type="button"
                 onClick={() => {
                   setRole("dealer");
-                  setEmail("dealer@eduvault.com");
+                  setEmail("bala@gmail.com");
                   setPassword("password123");
                 }}
                 className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"
@@ -268,7 +268,7 @@ function LoginContent() {
                 type="button"
                 onClick={() => {
                   setRole("student");
-                  setEmail("student@eduvault.com");
+                  setEmail("nivas@gmail.com");
                   setPassword("password123");
                 }}
                 className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"

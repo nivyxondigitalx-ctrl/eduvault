@@ -8,6 +8,7 @@ import { useDemo } from "../../../lib/context";
 import { RatingDisplay } from "../../../components/shared/RatingDisplay";
 import { AccessBadge } from "../../../components/shared/AccessBadge";
 import { formatCurrency } from "../../../lib/storage";
+import { DocumentThumbnail } from "../../../components/shared/DocumentThumbnail";
 import {
   Search,
   Filter,
@@ -465,15 +466,7 @@ function BrowseContent() {
                   >
                     <div>
                       {/* Thumbnail styling */}
-                      <div className={`aspect-[16/10] bg-gradient-to-tr ${mat.thumbnailStyle} p-4 flex flex-col justify-between text-white relative`}>
-                        <span className="self-start px-2 py-0.5 bg-white/20 text-[9px] font-bold rounded uppercase tracking-wider backdrop-blur-sm">
-                          {mat.category.replace("_", " ")}
-                        </span>
-                        <div>
-                          <span className="text-[9px] font-mono opacity-80 block tracking-widest">{mat.subjectCode}</span>
-                          <h3 className="font-bold text-xs mt-0.5 leading-snug line-clamp-2">{mat.title}</h3>
-                        </div>
-                      </div>
+                      <DocumentThumbnail material={mat} size="lg" />
 
                       {/* Content panel */}
                       <div className="p-4 space-y-3">
@@ -527,9 +520,7 @@ function BrowseContent() {
                   >
                     <div className="flex gap-4 items-center">
                       {/* Left icon wrapper */}
-                      <div className={`w-12 h-16 rounded-xl bg-gradient-to-tr ${mat.thumbnailStyle} flex flex-col justify-center items-center text-white text-[10px] font-bold shrink-0 shadow-sm`}>
-                        {mat.subjectCode.slice(0, 2)}
-                      </div>
+                      <DocumentThumbnail material={mat} size="sm" />
                       
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">

@@ -183,18 +183,21 @@ model Review {
 }
 
 model Order {
-  id            String   @id @default(uuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orderNumber   String   @unique
-  subtotal      Float
-  tax           Float
-  discount      Float
-  total         Float
-  paymentStatus String   // "pending", "completed", "failed"
-  paymentMethod String   // "UPI", "Card", "Net Banking", "Wallet"
-  couponCode    String?
-  createdAt     DateTime @default(now())
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderNumber      String   @unique
+  subtotal         Float
+  tax              Float
+  discount         Float
+  total            Float
+  paymentStatus    String   // "pending", "completed", "failed"
+  paymentMethod    String   // "UPI", "Card", "Net Banking", "Wallet"
+  couponCode       String?
+  gatewayOrderId   String?  @unique
+  gatewayPaymentId String?  @unique
+  gatewaySignature String?
+  createdAt        DateTime @default(now())
 
   items         OrderItem[]
   ledgerEntries LedgerEntry[]
@@ -296,5 +299,14 @@ model AuditLog {
   details   String
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model SystemError {
+  id        String   @id @default(uuid())
+  message   String
+  stack     String?
+  url       String?
+  resolved  Boolean  @default(false)
   createdAt DateTime @default(now())
 }

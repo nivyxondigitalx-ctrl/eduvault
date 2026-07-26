@@ -96,11 +96,11 @@ export const initDb = (force = false) => {
   checkAndSeed(KEYS.USERS, MOCK_USERS);
   checkAndSeed(KEYS.DEALERS, MOCK_DEALERS);
   checkAndSeed(KEYS.STUDENT_PROFILES, MOCK_STUDENTS_PROFILES);
-  checkAndSeed(KEYS.MATERIALS, MOCK_MATERIALS);
-  checkAndSeed(KEYS.REVIEWS, MOCK_REVIEWS);
-  checkAndSeed(KEYS.ORDERS, MOCK_ORDERS);
-  checkAndSeed(KEYS.LEDGER, MOCK_LEDGER);
-  checkAndSeed(KEYS.PAYOUTS, MOCK_PAYOUTS);
+  checkAndSeed(KEYS.MATERIALS, []);
+  checkAndSeed(KEYS.REVIEWS, []);
+  checkAndSeed(KEYS.ORDERS, []);
+  checkAndSeed(KEYS.LEDGER, []);
+  checkAndSeed(KEYS.PAYOUTS, []);
   checkAndSeed(KEYS.AD_CAMPAIGNS, AD_CAMPAIGNS);
   checkAndSeed(KEYS.SUBSCRIPTION_PLANS, SUBSCRIPTION_PLANS);
   checkAndSeed(KEYS.NOTIFICATIONS, MOCK_NOTIFICATIONS);

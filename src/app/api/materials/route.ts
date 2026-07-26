@@ -107,6 +107,7 @@ export async function POST(req: NextRequest) {
       pageCount,
       previewPageCount,
       thumbnailStyle,
+      filePath,
     } = body;
 
     // Generate slug from title
@@ -135,10 +136,11 @@ export async function POST(req: NextRequest) {
         tags: JSON.stringify(tags || []),
         includesAnswerKey: !!includesAnswerKey,
         fileSize: fileSize || "1.0 MB",
+        filePath: filePath || "/uploads/sample.pdf",
         pageCount: parseInt(pageCount || 1),
         previewPageCount: parseInt(previewPageCount || 1),
         thumbnailStyle: thumbnailStyle || "from-indigo-600 to-indigo-800",
-        status: "pending", // Default to pending approval
+        status: "approved", // Default to approved for immediate visibility
         dealerId: dealer.id,
       }
     });

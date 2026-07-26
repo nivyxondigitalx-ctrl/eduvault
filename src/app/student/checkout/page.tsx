@@ -8,11 +8,25 @@ import { CheckCircle, ShieldCheck, CreditCard, Sparkles, Loader, ShoppingBag } f
 import { toast } from "sonner";
 import Link from "next/link";
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if (typeof window !== "undefined" && (window as any).Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const coupon = searchParams.get("coupon") || "";
-  const { cart, checkout, currentUser, studentProfiles, subscriptionPlans } = useDemo();
+  const { cart, checkout, currentUser, studentProfiles, subscriptionPlans, clearCart, refreshBackendState } = useDemo();
 
   const [paymentMethod, setPaymentMethod] = useState<"UPI" | "Card" | "Net Banking" | "Wallet">("UPI");
   const [loading, setLoading] = useState(false);
@@ -43,18 +57,89 @@ function CheckoutContent() {
   const tax = Math.round(netAmountBeforeTax * 0.18);
   const netAmount = netAmountBeforeTax + tax;
 
-  const handlePay = () => {
+  const handlePay = async () => {
     setLoading(true);
-    setTimeout(async () => {
-      const order = await checkout(paymentMethod, coupon);
-      setLoading(false);
-      if (order) {
-        setCreatedOrder(order);
-        toast.success("Payment successful! Resources unlocked.");
-      } else {
+    try {
+      const response = await checkout(paymentMethod, coupon);
+      if (!response) {
         toast.error("Checkout failed. Please review your cart.");
+        setLoading(false);
+        return;
       }
-    }, 1500);
+
+      if (response.isSimulation) {
+        setCreatedOrder(response.order);
+        toast.success("Payment successful! Resources unlocked.");
+        setLoading(false);
+        return;
+      }
+
+      // Real Razorpay payment flow
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        toast.error("Failed to load Razorpay payment SDK.");
+        setLoading(false);
+        return;
+      }
+
+      const options = {
+        key: response.key,
+        amount: response.amount,
+        currency: response.currency,
+        name: "EduVault",
+        description: "Purchase study resources",
+        order_id: response.gatewayOrderId,
+        handler: async function (verifyResponse: any) {
+          setLoading(true);
+          try {
+            const verifyRes = await fetch("/api/orders/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId: response.order.id,
+                razorpayPaymentId: verifyResponse.razorpay_payment_id,
+                razorpayOrderId: verifyResponse.razorpay_order_id,
+                razorpaySignature: verifyResponse.razorpay_signature,
+              }),
+            });
+
+            if (verifyRes.ok) {
+              const finalOrder = await verifyRes.json();
+              clearCart();
+              await refreshBackendState();
+              setCreatedOrder(finalOrder);
+              toast.success("Payment verified successfully!");
+            } else {
+              const errData = await verifyRes.json();
+              toast.error(errData.error || "Payment signature verification failed.");
+            }
+          } catch (e: any) {
+            toast.error("An error occurred during verification.");
+          } finally {
+            setLoading(false);
+          }
+        },
+        prefill: {
+          name: profile?.name || currentUser?.name || "",
+          email: currentUser?.email || "",
+        },
+        theme: {
+          color: "#3730A3",
+        },
+        modal: {
+          ondismiss: function () {
+            toast.info("Payment cancelled.");
+            setLoading(false);
+          }
+        }
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      toast.error(err.message || "An unexpected error occurred.");
+      setLoading(false);
+    }
   };
 
   if (createdOrder) {
@@ -78,7 +163,7 @@ function CheckoutContent() {
           {/* Receipt Breakdown details */}
           <div className="bg-slate-50 dark:bg-zinc-800/40 rounded-2xl p-5 text-left border border-slate-100 dark:border-zinc-800 text-xs text-slate-600 dark:text-zinc-400 space-y-3">
             <div className="flex justify-between font-semibold">
-              <span>Gross Total Items ({createdOrder.items.length})</span>
+              <span>Gross Total Items ({createdOrder.items?.length || 0})</span>
               <span>{formatCurrency(createdOrder.grossAmount)}</span>
             </div>
             {createdOrder.discountAmount > 0 && (

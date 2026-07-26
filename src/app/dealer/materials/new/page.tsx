@@ -61,15 +61,18 @@ export default function NewMaterialPage() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [fileName, setFileName] = useState("");
   const [fileSize, setFileSize] = useState("");
-  const [pageCount, setPageCount] = useState(10);
-  const [previewPageCount, setPreviewPageCount] = useState(2);
+  const [filePath, setFilePath] = useState("");
+  const [pageCount, setPageCount] = useState<number | "">(10);
+  const [previewPageCount, setPreviewPageCount] = useState<number | "">(2);
 
   const [accessModes, setAccessModes] = useState<any[]>(["purchase"]);
-  const [price, setPrice] = useState(49);
-  const [discount, setDiscount] = useState(10);
+  const [price, setPrice] = useState<number | "">(49);
+  const [discount, setDiscount] = useState<number | "">(10);
   const [subEligible, setSubEligible] = useState(true);
 
   const [declarationAgree, setDeclarationAgree] = useState(false);
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Helpers
   const filteredColleges = colleges.filter(c => c.universityId === univId);
@@ -99,7 +102,8 @@ export default function NewMaterialPage() {
         toast.error("Please choose at least one access mode.");
         return;
       }
-      if (accessModes.includes("purchase") && price <= 0) {
+      const numPrice = Number(price || 0);
+      if (accessModes.includes("purchase") && (!price || numPrice <= 0)) {
         toast.error("Price must be greater than zero for Premium purchases.");
         return;
       }
@@ -112,24 +116,49 @@ export default function NewMaterialPage() {
     setCurrentStep((prev) => Math.max(0, prev - 1));
   };
 
-  const handleSimulateUpload = () => {
-    setFileUploading(true);
-    setUploadProgress(0);
-    setFileName("Solved_Question_Paper_2026.pdf");
-    setFileSize("3.4 MB");
+  const handleRealUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    const timer = setInterval(() => {
-      setUploadProgress((p) => {
-        if (p >= 100) {
-          clearInterval(timer);
-          setFileUploading(false);
-          setFileUploaded(true);
-          toast.success("PDF upload completed!");
-          return 100;
-        }
-        return p + 20;
+    if (file.type !== "application/pdf") {
+      toast.error("Please upload a PDF file only.");
+      return;
+    }
+
+    setFileUploading(true);
+    setUploadProgress(15);
+    setFileName(file.name);
+    setFileSize(`${(file.size / (1024 * 1024)).toFixed(2)} MB`);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      setUploadProgress(45);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       });
-    }, 200);
+
+      setUploadProgress(85);
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setFilePath(data.filePath);
+        setFileSize(data.fileSize);
+        setUploadProgress(100);
+        setFileUploading(false);
+        setFileUploaded(true);
+        toast.success("PDF upload completed successfully!");
+      } else {
+        throw new Error(data.error || "Failed to upload file");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setFileUploading(false);
+      setFileUploaded(false);
+      toast.error(err.message || "Something went wrong during upload");
+    }
   };
 
   const handleAccessModeToggle = (mode: string) => {
@@ -166,15 +195,16 @@ export default function NewMaterialPage() {
       examMonth,
       examYear,
       language,
-      pageCount,
+      pageCount: pageCount === "" ? 0 : Number(pageCount),
       fileSize,
+      filePath,
       thumbnailStyle: "from-indigo-600 to-indigo-800",
-      previewPageCount,
-      price: accessModes.includes("purchase") ? price : 0,
-      discount: accessModes.includes("purchase") ? discount : 0,
+      previewPageCount: previewPageCount === "" ? 0 : Number(previewPageCount),
+      price: accessModes.includes("purchase") ? (price === "" ? 0 : Number(price)) : 0,
+      discount: accessModes.includes("purchase") ? (discount === "" ? 0 : Number(discount)) : 0,
       accessModes: accessModes.length > 0 ? accessModes : ["free"],
       subscriptionEligible: subEligible,
-      status: "pending", // submitted for moderation
+      status: "approved", // auto-approved for immediate visibility
       tags: tags.split(",").map(t => t.trim()).filter(Boolean),
       includesAnswerKey,
     });
@@ -454,7 +484,21 @@ export default function NewMaterialPage() {
             </h3>
 
             {/* Upload Zone */}
-            <div className="border-2 border-dashed border-slate-200 dark:border-zinc-800 hover:border-indigo-500 dark:hover:border-indigo-700 bg-slate-50/50 dark:bg-zinc-900/50 p-8 rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center min-h-[220px]" onClick={!fileUploaded ? handleSimulateUpload : undefined}>
+            <div 
+              className="border-2 border-dashed border-slate-200 dark:border-zinc-800 hover:border-indigo-500 dark:hover:border-indigo-700 bg-slate-50/50 dark:bg-zinc-900/50 p-8 rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center min-h-[220px]" 
+              onClick={() => {
+                if (!fileUploaded && !fileUploading) {
+                  fileInputRef.current?.click();
+                }
+              }}
+            >
+              <input 
+                ref={fileInputRef}
+                type="file"
+                accept="application/pdf"
+                onChange={handleRealUpload}
+                className="hidden"
+              />
               
               {fileUploading ? (
                 <div className="space-y-3">
@@ -474,6 +518,7 @@ export default function NewMaterialPage() {
                     onClick={(e) => {
                       e.stopPropagation();
                       setFileUploaded(false);
+                      setFilePath("");
                     }}
                     className="text-[10px] text-rose-500 font-bold hover:underline"
                   >
@@ -483,7 +528,7 @@ export default function NewMaterialPage() {
               ) : (
                 <div className="space-y-2">
                   <Upload className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                  <p className="text-xs font-bold text-slate-700 dark:text-zinc-300">Click or Drag to Upload PDF Document</p>
+                  <p className="text-xs font-bold text-slate-700 dark:text-zinc-300">Click to Select and Upload PDF Document</p>
                   <p className="text-[10px] text-slate-400">Accepted: Solved key PDF up to 15 MB volume size.</p>
                 </div>
               )}
@@ -497,7 +542,10 @@ export default function NewMaterialPage() {
                   type="number"
                   required
                   value={pageCount}
-                  onChange={(e) => setPageCount(parseInt(e.target.value))}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setPageCount(val === "" ? "" : parseInt(val));
+                  }}
                   className="block w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border-0 focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-zinc-50 text-xs font-semibold rounded-xl"
                 />
               </div>
@@ -507,7 +555,10 @@ export default function NewMaterialPage() {
                   type="number"
                   required
                   value={previewPageCount}
-                  onChange={(e) => setPreviewPageCount(parseInt(e.target.value))}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setPreviewPageCount(val === "" ? "" : parseInt(val));
+                  }}
                   className="block w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border-0 focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-zinc-50 text-xs font-semibold rounded-xl"
                 />
               </div>
@@ -567,7 +618,10 @@ export default function NewMaterialPage() {
                   <input
                     type="number"
                     value={price}
-                    onChange={(e) => setPrice(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setPrice(val === "" ? "" : parseInt(val));
+                    }}
                     className="block w-full px-3 py-2 bg-white dark:bg-zinc-800 border-0 focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-zinc-50 text-xs font-semibold rounded-xl"
                   />
                 </div>
@@ -576,7 +630,10 @@ export default function NewMaterialPage() {
                   <input
                     type="number"
                     value={discount}
-                    onChange={(e) => setDiscount(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setDiscount(val === "" ? "" : parseInt(val));
+                    }}
                     className="block w-full px-3 py-2 bg-white dark:bg-zinc-800 border-0 focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-zinc-50 text-xs font-semibold rounded-xl"
                   />
                 </div>
@@ -622,7 +679,9 @@ export default function NewMaterialPage() {
               {accessModes.includes("purchase") && (
                 <div className="flex justify-between">
                   <span>Net Price:</span>
-                  <strong className="text-indigo-600">{formatCurrency(price - discount)}</strong>
+                  <strong className="text-indigo-600">
+                    {formatCurrency(Number(price || 0) - Number(discount || 0))}
+                  </strong>
                 </div>
               )}
             </div>

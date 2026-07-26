@@ -7,6 +7,7 @@ import { RatingDisplay } from "../../../components/shared/RatingDisplay";
 import { formatCurrency } from "../../../lib/storage";
 import { BookOpen, Download, Eye, AlertCircle, FileText, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import { DocumentThumbnail } from "../../../components/shared/DocumentThumbnail";
 
 type LibraryTab = "all" | "purchased" | "subscription" | "ad_unlock" | "free";
 
@@ -103,9 +104,7 @@ export default function StudentLibraryPage() {
               className="group bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-slate-100 dark:border-zinc-800 flex justify-between items-center shadow-sm hover:shadow-md transition-all"
             >
               <div className="flex gap-3 items-center overflow-hidden">
-                <div className={`w-10 h-14 rounded-lg bg-gradient-to-tr ${mat.thumbnailStyle} text-white flex items-center justify-center font-bold text-[10px] shrink-0`}>
-                  {mat.subjectCode.slice(0, 2)}
-                </div>
+                <DocumentThumbnail material={mat} size="sm" />
                 <div className="overflow-hidden">
                   <span className="text-[8px] bg-slate-50 dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
                     {mat.category.replace("_", " ")}

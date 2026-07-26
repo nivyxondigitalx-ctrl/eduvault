@@ -66,7 +66,7 @@ interface DemoContextType {
   toggleWishlist: (id: string) => void;
   
   // Checkout
-  checkout: (paymentMethod: "UPI" | "Card" | "Net Banking" | "Wallet", couponCode?: string) => Promise<Order | null>;
+  checkout: (paymentMethod: "UPI" | "Card" | "Net Banking" | "Wallet", couponCode?: string) => Promise<any>;
   
   // Student Actions
   watchAdToUnlock: (materialId: string) => Promise<boolean>;
@@ -267,11 +267,10 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setWishlist(storage.getWishlist());
   };
 
-  // Checkout
   const checkout = async (
     paymentMethod: "UPI" | "Card" | "Net Banking" | "Wallet",
     couponCode?: string
-  ): Promise<Order | null> => {
+  ): Promise<any> => {
     if (!currentUser) return null;
     const currentCart = storage.getCart();
     if (currentCart.length === 0) return null;
@@ -323,11 +322,13 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (res.ok) {
-        const order = await res.json();
-        storage.clearCart();
-        setCart([]);
-        await refreshBackendState();
-        return order;
+        const data = await res.json();
+        if (data.isSimulation) {
+          storage.clearCart();
+          setCart([]);
+          await refreshBackendState();
+        }
+        return data;
       }
       return null;
     } catch (e) {

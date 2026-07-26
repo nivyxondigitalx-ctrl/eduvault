@@ -6,6 +6,7 @@ import { useDemo } from "../../lib/context";
 import { RatingDisplay } from "../../components/shared/RatingDisplay";
 import { AccessBadge } from "../../components/shared/AccessBadge";
 import { formatCurrency } from "../../lib/storage";
+import { DocumentThumbnail } from "../../components/shared/DocumentThumbnail";
 import {
   GraduationCap,
   Play,
@@ -170,9 +171,7 @@ export default function StudentDashboardOverview() {
                 href={`/material/${mat.slug}`}
                 className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-slate-100 dark:border-zinc-800 flex gap-3 shadow-sm hover:shadow-md transition-all"
               >
-                <div className={`w-10 h-14 rounded-lg bg-gradient-to-tr ${mat.thumbnailStyle} text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-sm`}>
-                  {mat.subjectCode.slice(0, 2)}
-                </div>
+                <DocumentThumbnail material={mat} size="sm" />
                 <div className="overflow-hidden">
                   <span className="text-[8px] bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
                     {mat.category.replace("_", " ")}
@@ -204,9 +203,7 @@ export default function StudentDashboardOverview() {
                 href={`/material/${mat.slug}`}
                 className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-slate-100 dark:border-zinc-800 flex gap-3 shadow-sm hover:shadow-md transition-all animate-fade-in"
               >
-                <div className={`w-10 h-14 rounded-lg bg-gradient-to-tr ${mat.thumbnailStyle} text-white flex items-center justify-center font-bold text-[10px] shrink-0`}>
-                  {mat.subjectCode.slice(0, 2)}
-                </div>
+                <DocumentThumbnail material={mat} size="sm" />
                 <div className="overflow-hidden">
                   <h4 className="font-bold text-xs text-slate-800 dark:text-zinc-200 truncate">
                     {mat.title}

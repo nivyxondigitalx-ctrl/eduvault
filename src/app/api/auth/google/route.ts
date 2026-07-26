@@ -9,7 +9,10 @@ export async function GET(req: NextRequest) {
     : req.nextUrl.origin;
   const redirectUri = `${appUrl}/api/auth/google/callback`;
 
-  console.log("[Google OAuth Init] Client ID:", clientId ? `${clientId.substring(0, 15)}...` : "MISSING", "Redirect URI:", redirectUri);
+  const { searchParams } = new URL(req.url);
+  const role = searchParams.get("role") || "student";
+
+  console.log("[Google OAuth Init] Client ID:", clientId ? `${clientId.substring(0, 15)}...` : "MISSING", "Redirect URI:", redirectUri, "Role:", role);
 
   if (!clientId || clientId === "your-google-client-id.apps.googleusercontent.com") {
     return NextResponse.json(
@@ -25,6 +28,7 @@ export async function GET(req: NextRequest) {
     scope: "openid email profile",
     access_type: "offline",
     prompt: "select_account",
+    state: role,
   });
 
   const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;

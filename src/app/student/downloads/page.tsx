@@ -5,6 +5,7 @@ import { useDemo } from "../../../lib/context";
 import { BookOpen, Download, AlertCircle, FileText, Calendar } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { DocumentThumbnail } from "../../../components/shared/DocumentThumbnail";
 
 export default function StudentDownloadsPage() {
   const { currentUser, studentProfiles, materials } = useDemo();
@@ -62,9 +63,7 @@ export default function StudentDownloadsPage() {
             {downloadedFiles.map((mat) => (
               <div key={mat.id} className="p-4 flex justify-between items-center text-xs">
                 <div className="flex items-center gap-3">
-                  <div className={`w-8 h-10 rounded-lg bg-gradient-to-tr ${mat.thumbnailStyle} text-white flex items-center justify-center font-bold text-[9px]`}>
-                    PDF
-                  </div>
+                  <DocumentThumbnail material={mat} size="sm" />
                   <div>
                     <h4 className="font-bold text-slate-800 dark:text-zinc-200 line-clamp-1">{mat.title}</h4>
                     <span className="text-[9px] text-slate-400 mt-0.5 block">{mat.subjectCode} • {mat.fileSize}</span>
@@ -72,7 +71,15 @@ export default function StudentDownloadsPage() {
                 </div>
 
                 <button
-                  onClick={() => toast.success(`Re-downloading PDF of "${mat.title}"`)}
+                  onClick={() => {
+                    toast.success(`Re-downloading PDF of "${mat.title}"`);
+                    const link = document.createElement("a");
+                    link.href = mat.filePath || "/uploads/sample.pdf";
+                    link.download = `${mat.title.replace(/[^a-zA-Z0-9.-]/g, "_")}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
                   className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 rounded-lg font-semibold"
                 >
                   Download Again

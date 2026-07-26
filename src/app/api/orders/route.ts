@@ -1,6 +1,16 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "../../../lib/prisma";
 import { getSessionUser } from "../../../lib/auth";
+import Razorpay from "razorpay";
+
+const hasRazorpayKeys = !!(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
+
+const razorpay = hasRazorpayKeys
+  ? new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID!,
+      key_secret: process.env.RAZORPAY_KEY_SECRET!,
+    })
+  : null;
 
 export async function GET(req: NextRequest) {
   try {
@@ -54,7 +64,61 @@ export async function POST(req: NextRequest) {
 
     const orderNumber = `EV-${Date.now().toString().slice(-8)}`;
 
-    // Create the order using a transaction
+    if (hasRazorpayKeys && razorpay) {
+      // 1. Create Razorpay order
+      const amountInPaisa = Math.round(parseFloat(total) * 100);
+      const rzpOrder = await razorpay.orders.create({
+        amount: amountInPaisa,
+        currency: "INR",
+        receipt: orderNumber,
+        payment_capture: true
+      });
+
+      // 2. Create Order in Database as PENDING
+      const order = await prisma.$transaction(async (tx) => {
+        const orderRecord = await tx.order.create({
+          data: {
+            userId: session.id,
+            orderNumber,
+            subtotal: parseFloat(subtotal),
+            tax: parseFloat(tax || 0),
+            discount: parseFloat(discount || 0),
+            total: parseFloat(total),
+            paymentStatus: "pending",
+            paymentMethod: paymentMethod || "UPI",
+            couponCode,
+            gatewayOrderId: rzpOrder.id,
+          }
+        });
+
+        for (const item of items) {
+          await tx.orderItem.create({
+            data: {
+              orderId: orderRecord.id,
+              materialId: item.materialId,
+              price: parseFloat(item.price),
+              discount: parseFloat(item.discount || 0),
+            }
+          });
+        }
+
+        return tx.order.findUnique({
+          where: { id: orderRecord.id },
+          include: { items: true }
+        });
+      });
+
+      return NextResponse.json({
+        isSimulation: false,
+        order,
+        gatewayOrderId: rzpOrder.id,
+        key: process.env.RAZORPAY_KEY_ID,
+        amount: amountInPaisa,
+        currency: "INR",
+      });
+    }
+
+    // Fallback simulation mode
     const result = await prisma.$transaction(async (tx) => {
       // 1. Create order
       const order = await tx.order.create({
@@ -65,7 +129,7 @@ export async function POST(req: NextRequest) {
           tax: parseFloat(tax || 0),
           discount: parseFloat(discount || 0),
           total: parseFloat(total),
-          paymentStatus: "completed", // Assume payment is successful immediately for simulation
+          paymentStatus: "completed",
           paymentMethod: paymentMethod || "UPI",
           couponCode,
         }
@@ -123,10 +187,16 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      return order;
+      return tx.order.findUnique({
+        where: { id: order.id },
+        include: { items: true }
+      });
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json({
+      isSimulation: true,
+      order: result,
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

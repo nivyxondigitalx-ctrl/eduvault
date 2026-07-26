@@ -7,6 +7,7 @@ import { RatingDisplay } from "../../../components/shared/RatingDisplay";
 import { formatCurrency } from "../../../lib/storage";
 import { Heart, Trash2, BookOpen, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import { DocumentThumbnail } from "../../../components/shared/DocumentThumbnail";
 
 export default function StudentSavedPage() {
   const { wishlist, materials, toggleWishlist, colleges } = useDemo();
@@ -56,20 +57,14 @@ export default function StudentSavedPage() {
               className="group bg-white dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div>
-                <div className={`aspect-[16/10] bg-gradient-to-tr ${mat.thumbnailStyle} p-4 flex flex-col justify-between text-white relative`}>
-                  <span className="self-start px-2 py-0.5 bg-white/20 text-[9px] font-bold rounded uppercase tracking-wider backdrop-blur-sm">
-                    {mat.category.replace("_", " ")}
-                  </span>
+                <div className="relative">
+                  <DocumentThumbnail material={mat} size="lg" />
                   <button
                     onClick={(e) => handleRemove(e, mat.id)}
-                    className="absolute top-4 right-4 p-1.5 bg-white/10 text-white hover:bg-white/20 rounded-xl"
+                    className="absolute top-4 right-4 p-1.5 bg-slate-100/80 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-xl transition-all shadow z-10"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
-                  <div>
-                    <span className="text-[9px] font-mono opacity-80 block tracking-widest">{mat.subjectCode}</span>
-                    <h3 className="font-bold text-xs mt-0.5 leading-snug line-clamp-2">{mat.title}</h3>
-                  </div>
                 </div>
 
                 <div className="p-4 space-y-2">
