@@ -4,6 +4,7 @@ import "./globals.css";
 import { DemoProvider } from "../lib/context";
 import { Toaster } from "sonner";
 import { ErrorBoundary } from "../components/shared/ErrorBoundary";
+import { AiChatbot } from "../components/shared/AiChatbot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
         <ErrorBoundary>
           <DemoProvider>
             {children}
+            <AiChatbot />
             <Toaster position="top-right" richColors />
           </DemoProvider>
         </ErrorBoundary>
