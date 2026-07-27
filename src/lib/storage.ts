@@ -41,6 +41,8 @@ import {
   SupportTicket,
   CartItem,
   AuditLog,
+  SyllabusItem,
+  TestAttempt,
 } from "../types";
 
 const KEYS = {
@@ -67,6 +69,8 @@ const KEYS = {
   CART: "ev_cart",
   WISHLIST: "ev_wishlist",
   AUDIT_LOGS: "ev_audit_logs",
+  SYLLABUS: "ev_syllabus",
+  TEST_HISTORY: "ev_test_history",
 };
 
 export const initDb = (force = false) => {
@@ -116,6 +120,27 @@ export const initDb = (force = false) => {
       createdAt: new Date().toISOString(),
     }
   ]);
+
+  const mockSyllabus: SyllabusItem[] = [
+    {
+      id: "syl-1",
+      subject: "CS3351 Digital Principles and Computer Organisation",
+      unit: "Unit I - Combinational Logic",
+      topic: "Design of Logic Gates and Arithmetic Circuits",
+      content: "Combinational Circuits: Analysis and design procedures, Half Adder, Full Adder, Half Subtractor, Full Subtractor, Binary Ripple Carry Adder, carry look-ahead adder, BCD Adder, Decoders, Encoders, Multiplexers, Demultiplexers. Synthesis using logic gates. Design of basic digital arithmetic logic unit (ALU). Minimization of boolean logic expressions using Karnaugh Maps (K-Maps) and Quine-McCluskey tabular reduction.",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "syl-2",
+      subject: "CS3491 Artificial Intelligence and Machine Learning",
+      unit: "Unit II - Search Strategies",
+      topic: "Uninformed and Informed Search Heuristics",
+      content: "Problem-solving agents, formulation of search problems, search spaces. Uninformed Search Strategies: Breadth-First Search (BFS), Depth-First Search (DFS), Uniform Cost Search (UCS), Depth-Limited Search, Iterative Deepening DFS. Informed Search Strategies: Greedy Best-First Search, A* Search algorithm, admissibility and consistency of heuristics, heuristic function design, hill-climbing optimization, simulated annealing.",
+      createdAt: new Date().toISOString(),
+    }
+  ];
+  checkAndSeed(KEYS.SYLLABUS, mockSyllabus);
+  checkAndSeed(KEYS.TEST_HISTORY, []);
 
   if (force) {
     localStorage.removeItem(KEYS.CURRENT_USER);
@@ -237,6 +262,28 @@ export const toggleWishlist = (id: string) => {
 
 export const getAuditLogs = (): AuditLog[] => get(KEYS.AUDIT_LOGS, []);
 export const saveAuditLogs = (data: AuditLog[]) => set(KEYS.AUDIT_LOGS, data);
+
+// Syllabus & Test History
+export const getSyllabus = (): SyllabusItem[] => get(KEYS.SYLLABUS, []);
+export const saveSyllabus = (data: SyllabusItem[]) => set(KEYS.SYLLABUS, data);
+export const addSyllabus = (item: SyllabusItem) => {
+  const list = getSyllabus();
+  list.push(item);
+  saveSyllabus(list);
+};
+export const deleteSyllabus = (id: string) => {
+  const list = getSyllabus();
+  const updated = list.filter(s => s.id !== id);
+  saveSyllabus(updated);
+};
+
+export const getTestHistory = (): TestAttempt[] => get(KEYS.TEST_HISTORY, []);
+export const saveTestHistory = (data: TestAttempt[]) => set(KEYS.TEST_HISTORY, data);
+export const addTestAttempt = (item: TestAttempt) => {
+  const list = getTestHistory();
+  list.unshift(item); // Add newest first
+  saveTestHistory(list);
+};
 
 // Utilities
 export const formatCurrency = (amount: number) => {

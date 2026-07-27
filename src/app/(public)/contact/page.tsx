@@ -46,15 +46,15 @@ export default function ContactPage() {
             <div className="space-y-4 text-xs">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-indigo-600" />
-                <span>support@eduvault.com</span>
+                <span>nivyxondigitalx@gmail.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-indigo-600" />
-                <span>+91 44 2235 7264</span>
+                <span>+91 7550321307</span>
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="w-4 h-4 text-indigo-600" />
-                <span>Guindy, Chennai, Tamil Nadu</span>
+                <span>ERODE, TAMILNADU</span>
               </div>
             </div>
           </div>

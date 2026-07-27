@@ -273,6 +273,9 @@ export default function HomePage() {
                     <span className="text-[9px] text-slate-450 dark:text-zinc-500 block uppercase tracking-wider font-semibold">
                       {mat.examType} Exam • {mat.examMonth} {mat.examYear}
                     </span>
+                    <h3 className="text-xs font-bold text-slate-800 dark:text-zinc-100 line-clamp-1 mt-1">
+                      {mat.title}
+                    </h3>
                     <div className="flex items-center justify-between mt-2.5">
                       <span className="text-[10px] font-semibold text-slate-500 dark:text-zinc-400 truncate max-w-[150px]">
                         {colleges.find((c) => c.id === mat.collegeId)?.name || "College"}
@@ -305,7 +308,7 @@ export default function HomePage() {
             How Accessing Material Works
           </h2>
           <p className="text-xs text-slate-450 dark:text-zinc-500 max-w-xl mx-auto mb-12">
-            EduVault matches multiple study methods and budgets so you never fall behind in exam prep.
+            KalviNest matches multiple study methods and budgets so you never fall behind in exam prep.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 text-left">

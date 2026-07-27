@@ -18,6 +18,11 @@ import {
   FileText,
   Clock,
   Sparkles,
+  Flame,
+  BrainCircuit,
+  Trophy,
+  Target,
+  Zap,
 } from "lucide-react";
 
 export default function StudentDashboardOverview() {
@@ -73,71 +78,99 @@ export default function StudentDashboardOverview() {
         </div>
       </div>
 
-      {/* Subscription Alert & Ads Unlocks Remaining */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        
-        {/* Ads unlocks quota card */}
-        <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
+      {/* EduPlus Imported AI Study Suite & Streak Widget */}
+      <div className="bg-gradient-to-r from-slate-900 via-purple-950 to-indigo-950 text-white rounded-3xl p-6 border border-purple-500/30 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30 shadow-inner">
+              <Flame className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <span className="text-[10px] text-amber-300 font-extrabold uppercase tracking-widest block">EduPlus AI Study Hub</span>
+              <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                <span>Personalized Study Arsenal</span>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active Mode</span>
+              </h3>
+            </div>
+          </div>
+          <Link
+            href="/student/trophies"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-slate-950 hover:bg-amber-400 font-black text-xs transition-transform active:scale-95 shadow-lg"
+          >
+            <Trophy className="w-4 h-4 text-slate-950 fill-slate-950" />
+            <span>Trophy Room & XP Leaderboard</span>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Link
+            href="/student/tests"
+            className="p-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex flex-col justify-between group"
+          >
+            <div className="space-y-2">
+              <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                <BrainCircuit className="w-4 h-4" />
+              </div>
+              <h4 className="font-extrabold text-sm text-white group-hover:text-indigo-300 transition-colors">Smart Practice Test Room</h4>
+              <p className="text-xs text-slate-300 leading-normal">Generate real-time MCQs, short answers, & essays directly from syllabus topics.</p>
+            </div>
+            <div className="mt-4 text-[11px] font-bold text-indigo-400 flex items-center gap-1">
+              <span>Launch Quiz Suite &rarr;</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/student/revision"
+            className="p-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex flex-col justify-between group"
+          >
+            <div className="space-y-2">
+              <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center">
+                <Zap className="w-4 h-4" />
+              </div>
+              <h4 className="font-extrabold text-sm text-white group-hover:text-purple-300 transition-colors">AI Revision & Flashcards</h4>
+              <p className="text-xs text-slate-300 leading-normal">Synthesize instant exam cheat-sheets and Q&A flashcards for rapid memorization.</p>
+            </div>
+            <div className="mt-4 text-[11px] font-bold text-purple-400 flex items-center gap-1">
+              <span>Generate Cheat Sheets &rarr;</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/student/study-plan"
+            className="p-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex flex-col justify-between group"
+          >
+            <div className="space-y-2">
+              <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <Target className="w-4 h-4" />
+              </div>
+              <h4 className="font-extrabold text-sm text-white group-hover:text-emerald-300 transition-colors">Study Plan & Grammar Coach</h4>
+              <p className="text-xs text-slate-300 leading-normal">Schedule 7-day exam prep countdowns and improve academic writing scores.</p>
+            </div>
+            <div className="mt-4 text-[11px] font-bold text-emerald-400 flex items-center gap-1">
+              <span>Plan & Enhance &rarr;</span>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      {/* Download Alert & Quick Info */}
+      <div className="grid grid-cols-1 gap-6">
+        <div className="bg-emerald-50/60 dark:bg-emerald-950/10 border border-emerald-100/50 dark:border-emerald-900/20 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest block mb-1">
-              Ad-Unlock Daily Quota
-            </span>
-            <h3 className="text-base font-bold text-slate-800 dark:text-zinc-50">
-              Free Daily Document Passes
+            <h3 className="text-base font-bold text-emerald-800 dark:text-emerald-300">
+              Direct & Free Downloads Enabled
             </h3>
-            <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-              Unlock premium dealer files by watching simulated 10-second advertisements. Valid for 24 hours.
+            <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-2 leading-relaxed max-w-2xl">
+              All board exam study notes, lab manuals, and question papers on KalviNest are now completely free to view and download directly.
             </p>
           </div>
-          <div className="mt-6 flex items-baseline gap-2">
-            <span className="text-4xl font-black text-slate-900 dark:text-zinc-50">
-              {adUnlocksRemaining}
-            </span>
-            <span className="text-xs text-slate-500 font-semibold uppercase">
-              remaining today
-            </span>
-          </div>
+          <Link
+            href="/browse"
+            className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shrink-0 shadow-md shadow-emerald-100 dark:shadow-none"
+          >
+            Start Downloading Notes
+          </Link>
         </div>
-
-        {/* Subscription status card */}
-        <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
-          <div>
-            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest block mb-1">
-              Subscription Status
-            </span>
-            <h3 className="text-base font-bold text-slate-800 dark:text-zinc-50">
-              Plus Membership Plan
-            </h3>
-            
-            {profile?.isSubscribed ? (
-              <div className="mt-2 text-xs bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 p-3 rounded-xl border border-emerald-100 dark:border-emerald-900/30 flex items-start gap-2">
-                <Clock className="w-4 h-4 shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold">Active Member</p>
-                  <p className="text-[10px] text-emerald-600 mt-0.5">Expires: {new Date(profile.subscriptionExpiresAt).toLocaleDateString()}</p>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-2 text-xs bg-indigo-50 dark:bg-indigo-950/20 text-indigo-700 dark:text-indigo-400 p-3 rounded-xl border border-indigo-100 dark:border-indigo-900/30 flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold">Free Tier Account</p>
-                  <p className="text-[10px] text-indigo-600 mt-0.5">Upgrade for ad-free downloads & answer keys.</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-slate-50 dark:border-zinc-800/40">
-            <Link
-              href="/pricing"
-              className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1.5"
-            >
-              {profile?.isSubscribed ? "Extend Membership" : "Upgrade to Plus"} &rarr;
-            </Link>
-          </div>
-        </div>
-
       </div>
 
       {/* Library items index */}
@@ -209,8 +242,8 @@ export default function StudentDashboardOverview() {
                     {mat.title}
                   </h4>
                   <span className="text-[9px] text-slate-400 font-mono mt-0.5 block">{mat.subjectCode}</span>
-                  <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 mt-2 block">
-                    {mat.price > 0 ? formatCurrency(mat.price - mat.discount) : "FREE"}
+                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mt-2 block">
+                    FREE
                   </span>
                 </div>
               </Link>

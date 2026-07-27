@@ -90,10 +90,7 @@ export default function MaterialDetailClient({ slug }: { slug: string }) {
   const isAdUnlocked = studentProfile?.unlockedMaterialIds?.includes(mat.id) || false;
   const isPurchased = studentProfile?.unlockedMaterialIds?.includes(mat.id) || false; // in our mock storage, purchased items are added to unlockedMaterialIds
   
-  const hasAccess = mat.price === 0 || 
-                    isAdUnlocked || 
-                    isPurchased || 
-                    (mat.subscriptionEligible && isSubscribed);
+  const hasAccess = true; // All materials are now free and directly downloadable
 
   const isInCart = cart.some((c) => c.id === mat.id);
   const isWished = wishlist.includes(mat.id);
@@ -369,20 +366,15 @@ export default function MaterialDetailClient({ slug }: { slug: string }) {
                   </span>
                   <div className="flex items-baseline gap-2">
                     <span className="text-2xl font-black text-slate-900 dark:text-zinc-50">
-                      {mat.price > 0 ? formatCurrency(mat.price - mat.discount) : "FREE"}
+                      FREE
                     </span>
-                    {mat.price > 0 && mat.discount > 0 && (
-                      <span className="text-xs text-slate-400 line-through">
-                        {formatCurrency(mat.price)}
-                      </span>
-                    )}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-1.5">
-                  {mat.accessModes.map(mode => (
-                    <AccessBadge key={mode} mode={mode} />
-                  ))}
+                  <span className="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30 text-[9px] font-bold rounded-lg uppercase tracking-wider block">
+                    Direct Download
+                  </span>
                 </div>
               </div>
 

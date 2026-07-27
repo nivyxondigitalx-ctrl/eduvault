@@ -68,7 +68,7 @@ export default function RegisterPage() {
         return;
       }
 
-      toast.success("Account created successfully! Welcome to EduVault 🎉");
+      toast.success("Account created successfully! Welcome to KalviNest 🎉");
       // Refresh context state so currentUser is set from the new session cookie
       if (refreshBackendState) await refreshBackendState();
       router.push("/student");
@@ -87,20 +87,7 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        {/* App Icon */}
-        <div className="flex justify-center mb-5">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-2xl opacity-20 blur-lg group-hover:opacity-40 transition-opacity duration-300" />
-            <Image
-              src="/eduvault-icon.png"
-              alt="EduVault Icon"
-              width={72}
-              height={72}
-              className="relative rounded-2xl shadow-xl shadow-indigo-200/50 dark:shadow-indigo-900/30 ring-1 ring-indigo-100 dark:ring-indigo-900/50"
-              priority
-            />
-          </div>
-        </div>
+
 
         <AppLogo className="justify-center mb-4" />
         <h2 className="text-2xl font-black text-slate-900 dark:text-zinc-50 tracking-tight">

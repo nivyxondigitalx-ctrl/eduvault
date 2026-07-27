@@ -17,13 +17,13 @@ export default function AboutPage() {
               <Info className="w-6 h-6" />
             </div>
             <h1 className="text-2xl font-black text-slate-900 dark:text-zinc-50 tracking-tight leading-none">
-              About EduVault
+              About KalviNest
             </h1>
           </div>
 
           <div className="space-y-4 text-xs sm:text-sm leading-relaxed">
             <p>
-              EduVault is a premium digital academic marketplace born out of a desire to simplify student exam preparation. 
+              KalviNest is a premium digital academic marketplace born out of a desire to simplify student exam preparation. 
               Students across colleges spend hours finding syllabus handouts, notes, and previous question papers. We bring it all together under a single taxonomy.
             </p>
             <p>

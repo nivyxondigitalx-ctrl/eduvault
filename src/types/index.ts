@@ -307,3 +307,25 @@ export interface AuditLog {
   createdAt: string;
 }
 
+export interface SyllabusItem {
+  id: string;
+  subject: string;
+  unit: string;
+  topic: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface TestAttempt {
+  id: string;
+  subject: string;
+  topic: string;
+  score: number;
+  totalMarks: number;
+  testType: string; // "mcq" | "short" | "essay"
+  difficulty: string; // "easy" | "medium" | "hard"
+  questionCount: number;
+  timestamp: string;
+}
+
+

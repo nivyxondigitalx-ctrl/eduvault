@@ -72,16 +72,7 @@ export const Navbar: React.FC = () => {
             >
               Colleges
             </Link>
-            <Link
-              href="/pricing"
-              className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                isActive("/pricing")
-                  ? "text-indigo-600 bg-indigo-50/50 dark:text-indigo-400 dark:bg-indigo-950/20"
-                  : "text-slate-600 dark:text-zinc-300 hover:text-slate-900 hover:bg-slate-50 dark:hover:text-zinc-50 dark:hover:bg-zinc-800/40"
-              }`}
-            >
-              Subscriptions
-            </Link>
+
             <Link
               href="/become-a-dealer"
               className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
@@ -97,72 +88,9 @@ export const Navbar: React.FC = () => {
           {/* Desktop Right Panel */}
           <div className="hidden md:flex items-center gap-3">
             
-            {/* Theme Toggle */}
-            <ThemeToggle />
 
-            {/* Cart Button */}
-            {currentUser?.role === "student" && (
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setCartOpen(!cartOpen);
-                    setNotificationsOpen(false);
-                    setUserDropdownOpen(false);
-                  }}
-                  className="p-2 rounded-xl text-slate-500 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-zinc-50 hover:bg-slate-100 dark:hover:bg-zinc-800/80 transition-colors relative"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  {cart.length > 0 && (
-                    <span className="absolute top-1 right-1 w-4 h-4 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] font-bold">
-                      {cart.length}
-                    </span>
-                  )}
-                </button>
 
-                {/* Cart dropdown */}
-                {cartOpen && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800 py-3 px-4 z-50">
-                    <h3 className="font-bold text-sm text-slate-800 dark:text-zinc-100 pb-2 border-b border-slate-100 dark:border-zinc-800">
-                      My Shopping Cart ({cart.length})
-                    </h3>
-                    {cart.length === 0 ? (
-                      <p className="text-xs text-slate-400 dark:text-zinc-500 text-center py-6">Your cart is empty.</p>
-                    ) : (
-                      <>
-                        <div className="max-h-60 overflow-y-auto space-y-3 py-3">
-                          {cart.map((item) => (
-                            <div key={item.id} className="flex justify-between items-start text-xs">
-                              <div>
-                                <p className="font-semibold text-slate-900 dark:text-zinc-100 line-clamp-1">{item.title}</p>
-                                <span className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono uppercase bg-slate-50 dark:bg-zinc-800 px-1.5 py-0.5 rounded mt-1 inline-block">
-                                  {item.subjectCode}
-                                </span>
-                              </div>
-                              <span className="font-bold text-slate-900 dark:text-zinc-100 shrink-0 ml-2">
-                                {formatCurrency(item.price)}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="border-t border-slate-100 dark:border-zinc-800 pt-3 mt-1 flex flex-col gap-2.5">
-                          <div className="flex justify-between items-center text-xs font-bold">
-                            <span>Subtotal</span>
-                            <span>{formatCurrency(cart.reduce((a, b) => a + b.price, 0))}</span>
-                          </div>
-                          <Link
-                            href="/student/cart"
-                            onClick={() => setCartOpen(false)}
-                            className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-center text-xs font-semibold shadow-md shadow-indigo-100 dark:shadow-none block"
-                          >
-                            Checkout Now
-                          </Link>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
+
 
             {/* Notifications */}
             {currentUser && (
@@ -281,21 +209,8 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile menu toggle */}
           <div className="flex md:hidden items-center gap-2">
-            <ThemeToggle />
             
-            {currentUser?.role === "student" && (
-              <Link
-                href="/student/cart"
-                className="p-2 rounded-xl text-slate-500 dark:text-zinc-400 relative"
-              >
-                <ShoppingCart className="w-5 h-5" />
-                {cart.length > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] font-bold">
-                    {cart.length}
-                  </span>
-                )}
-              </Link>
-            )}
+
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -327,13 +242,7 @@ export const Navbar: React.FC = () => {
             >
               Colleges
             </Link>
-            <Link
-              href="/pricing"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800/40"
-            >
-              Subscriptions
-            </Link>
+
             <Link
               href="/become-a-dealer"
               onClick={() => setMobileMenuOpen(false)}

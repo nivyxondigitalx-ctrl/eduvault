@@ -195,6 +195,9 @@ export default function CollegeDetailClient({ slug }: { slug: string }) {
                         <span className="text-[9px] text-slate-400 uppercase tracking-widest block font-bold">
                           {mat.examType} Exam • {mat.examMonth} {mat.examYear}
                         </span>
+                        <h3 className="text-xs font-bold text-slate-800 dark:text-zinc-100 line-clamp-1">
+                          {mat.title}
+                        </h3>
                         <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">
                           {mat.description}
                         </p>
@@ -203,8 +206,8 @@ export default function CollegeDetailClient({ slug }: { slug: string }) {
 
                     <div className="p-4 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-zinc-900/40">
                       <RatingDisplay rating={mat.rating} count={mat.reviewCount} size="sm" />
-                      <span className="text-xs font-bold text-slate-900 dark:text-zinc-100">
-                        {mat.price > 0 ? formatCurrency(mat.price - mat.discount) : "FREE"}
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                        FREE
                       </span>
                     </div>
                   </Link>

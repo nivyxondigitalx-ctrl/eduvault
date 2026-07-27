@@ -13,26 +13,26 @@ export default function LegalClient({ type }: { type: string }) {
         return {
           title: "Privacy Policy",
           icon: ShieldCheck,
-          text: "EduVault respects your privacy and is committed to protecting your personal data. We do not store real payment credentials, card numbers, or government identifiers in browser localStorage. Any email and student account names processed in this demonstration are stored purely client-side inside local browser storage. If you choose to clear your browser history or reset the demo, this details will be erased.",
+          text: "KalviNest respects your privacy and is committed to protecting your personal data. We do not store real payment credentials, card numbers, or government identifiers in browser localStorage. Any email and student account names processed in this demonstration are stored purely client-side inside local browser storage. If you choose to clear your browser history or reset the demo, this details will be erased.",
         };
       case "refund":
         return {
           title: "Refund Policy",
           icon: Ban,
-          text: "Since all resources purchased on EduVault are downloadable digital products (PDFs, study notes, answered question papers), we do not support general refunds once a document is unlocked or downloaded. If you experience file corruption, incorrect uploads, or missing pages, you may report the material or submit a helpdesk ticket to request an adjustment.",
+          text: "Since all resources purchased on KalviNest are downloadable digital products (PDFs, study notes, answered question papers), we do not support general refunds once a document is unlocked or downloaded. If you experience file corruption, incorrect uploads, or missing pages, you may report the material or submit a helpdesk ticket to request an adjustment.",
         };
       case "dmca":
         return {
           title: "DMCA & Copyright Takedown Policy",
           icon: Scale,
-          text: "EduVault complies with copyright protection guidelines. If you believe any study material uploaded by our verified dealers infringes upon your copyright (e.g. copyright notes, university protected textbook pages), please file a copyright claim report. Main Admin will review the file, suspend access, and message the dealer. We enforce strict policies against repeat copyright infringement.",
+          text: "KalviNest complies with copyright protection guidelines. If you believe any study material uploaded by our verified dealers infringes upon your copyright (e.g. copyright notes, university protected textbook pages), please file a copyright claim report. Main Admin will review the file, suspend access, and message the dealer. We enforce strict policies against repeat copyright infringement.",
         };
       case "terms":
       default:
         return {
           title: "Terms of Service",
           icon: FileText,
-          text: "By accessing the EduVault website and browsing educational study guides, notes, and keys, you agree to comply with academic integrity policies. Resources uploaded are for personal preparation reference only. Sharing premium materials on public channels, violating author copyright, or bypassing ad-unlock countdowns constitutes a violation of these terms.",
+          text: "By accessing the KalviNest website and browsing educational study guides, notes, and keys, you agree to comply with academic integrity policies. Resources uploaded are for personal preparation reference only. Sharing premium materials on public channels, violating author copyright, or bypassing ad-unlock countdowns constitutes a violation of these terms.",
         };
     }
   };

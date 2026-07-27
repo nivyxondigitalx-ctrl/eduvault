@@ -12,11 +12,11 @@ export const Footer: React.FC = () => {
         <div className="space-y-4 md:col-span-1">
           <AppLogo className="text-white" />
           <p className="text-xs leading-relaxed max-w-sm text-slate-400">
-            EduVault is India's leading digital academic material hub, offering student-sourced, dealer-verified study materials, answer keys, and previous question papers.
+            KalviNest is India's leading digital academic material hub, offering student-sourced, dealer-verified study materials, answer keys, and previous question papers.
           </p>
           <div className="flex items-center gap-2 text-xs text-indigo-400 hover:text-indigo-300">
             <Globe className="w-3.5 h-3.5" />
-            <span>Tamil Nadu, India</span>
+            <span>Erode, Tamil Nadu, India</span>
           </div>
         </div>
 
@@ -80,15 +80,15 @@ export const Footer: React.FC = () => {
           <ul className="space-y-2.5 text-xs">
             <li className="flex items-center gap-2">
               <Mail className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
-              <span className="truncate">support@eduvault.com</span>
+              <span className="truncate">nivyxondigitalx@gmail.com</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
-              <span>+91 44 2235 7264</span>
+              <span>+91 7550321307</span>
             </li>
             <li className="flex items-center gap-2">
               <MapPin className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
-              <span className="leading-snug">Anna University Area, Guindy, Chennai, TN</span>
+              <span className="leading-snug">ERODE, TAMILNADU</span>
             </li>
           </ul>
         </div>
@@ -96,9 +96,9 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto border-t border-slate-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
-        <p>&copy; {new Date().getFullYear()} EduVault India. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} KalviNest India. All rights reserved.</p>
         <p className="mt-2 sm:mt-0 text-[11px] text-slate-500">
-          EduVault Academic Material Hub. All rights reserved.
+          KalviNest Academic Material Hub. All rights reserved.
         </p>
       </div>
     </footer>

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useDemo } from "../../lib/context";
+import { toast } from "sonner";
 import {
   LayoutDashboard,
   BookOpen,
@@ -28,6 +29,11 @@ import {
   X,
   AlertTriangle,
   Menu,
+  BrainCircuit,
+  Sparkles,
+  Calendar,
+  Trophy,
+  Camera,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -37,8 +43,45 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { currentUser, logout } = useDemo();
+  const { currentUser, logout, updateAvatar } = useDemo();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const toastId = toast.loading("Uploading profile photo...");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadRes.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const uploadData = await uploadRes.json();
+      const updated = await updateAvatar(uploadData.filePath);
+      
+      if (updated) {
+        toast.success("Profile photo updated successfully!", { id: toastId });
+      } else {
+        throw new Error("Failed to save profile photo path");
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || "Failed to upload photo", { id: toastId });
+    }
+  };
 
   const isLinkActive = (href: string) => {
     if (href === `/${role}`) {
@@ -81,10 +124,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
       default:
         return [
           { label: "Student Home", href: "/student", icon: LayoutDashboard },
+          { label: "Syllabus Manager", href: "/student/syllabus", icon: BookOpen },
+          { label: "AI Performance Analytics", href: "/student/analytics", icon: TrendingUp },
+          { label: "Smart Practice Quizzes", href: "/student/tests", icon: BrainCircuit },
+          { label: "AI Revision Notes", href: "/student/revision", icon: Sparkles },
+          { label: "Study Plan & Grammar", href: "/student/study-plan", icon: Calendar },
+          { label: "Trophy Room & Streaks", href: "/student/trophies", icon: Trophy },
           { label: "My Library", href: "/student/library", icon: BookOpen },
-          { label: "My Cart", href: "/student/cart", icon: FolderOpen },
           { label: "Saved Notes", href: "/student/saved", icon: Heart },
-          { label: "My Subscriptions", href: "/student/subscription", icon: ShieldCheck },
           { label: "Requested Files", href: "/student/requests", icon: PlusCircle },
           { label: "Notifications", href: "/student/notifications", icon: Bell },
           { label: "Academic Helpdesk", href: "/student/support", icon: HelpCircle },
@@ -109,11 +156,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
       <aside className="hidden md:flex w-64 shrink-0 bg-white dark:bg-zinc-900 border-r border-slate-100 dark:border-zinc-800 flex-col h-[calc(100vh-4rem)] sticky top-16 z-20 transition-colors">
         {/* Profile summary */}
         <div className="p-4 border-b border-slate-100 dark:border-zinc-800 flex items-center gap-3">
-          <img
-            src={currentUser?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser?.name}`}
-            alt={currentUser?.name}
-            className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 dark:border-zinc-800"
-          />
+          <div 
+            onClick={handleAvatarClick}
+            className="w-10 h-10 rounded-xl relative group overflow-hidden cursor-pointer bg-slate-50 border border-slate-200 dark:border-zinc-800 shrink-0"
+            title="Change profile photo"
+          >
+            <img
+              src={currentUser?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser?.name}`}
+              alt={currentUser?.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <Camera className="w-4 h-4" />
+            </div>
+          </div>
           <div className="overflow-hidden">
             <p className="font-bold text-xs text-slate-800 dark:text-zinc-50 truncate leading-none mb-1">
               {currentUser?.name}
@@ -188,11 +244,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
 
             {/* Profile summary */}
             <div className="p-4 border-b border-slate-100 dark:border-zinc-800 flex items-center gap-3">
-              <img
-                src={currentUser?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser?.name}`}
-                alt={currentUser?.name}
-                className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 dark:border-zinc-800"
-              />
+              <div 
+                onClick={handleAvatarClick}
+                className="w-10 h-10 rounded-xl relative group overflow-hidden cursor-pointer bg-slate-50 border border-slate-200 dark:border-zinc-800 shrink-0"
+                title="Change profile photo"
+              >
+                <img
+                  src={currentUser?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser?.name}`}
+                  alt={currentUser?.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Camera className="w-4 h-4" />
+                </div>
+              </div>
               <div className="overflow-hidden">
                 <p className="font-bold text-xs text-slate-800 dark:text-zinc-50 truncate leading-none mb-1">
                   {currentUser?.name}
@@ -245,6 +310,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
           </aside>
         </div>
       )}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        className="hidden"
+      />
     </>
   );
 };

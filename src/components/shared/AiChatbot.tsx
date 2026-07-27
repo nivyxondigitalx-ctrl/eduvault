@@ -335,7 +335,7 @@ export function AiChatbot() {
               </div>
               <div>
                 <h3 className="font-bold text-sm leading-tight">{theme.title}</h3>
-                <p className="text-[10px] text-white/80 font-medium">EduVault Knowledge Graph Enabled</p>
+                <p className="text-[10px] text-white/80 font-medium">KalviNest Knowledge Graph Enabled</p>
               </div>
             </div>
             <div className="flex items-center gap-1.5">

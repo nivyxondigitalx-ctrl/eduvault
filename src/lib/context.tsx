@@ -24,6 +24,8 @@ import {
   CartItem,
   UserRole,
   AuditLog,
+  SyllabusItem,
+  TestAttempt,
 } from "../types";
 
 interface DemoContextType {
@@ -67,6 +69,7 @@ interface DemoContextType {
   
   // Checkout
   checkout: (paymentMethod: "UPI" | "Card" | "Net Banking" | "Wallet", couponCode?: string) => Promise<any>;
+  updateAvatar: (avatarUrl: string) => Promise<boolean>;
   
   // Student Actions
   watchAdToUnlock: (materialId: string) => Promise<boolean>;
@@ -91,6 +94,13 @@ interface DemoContextType {
   manageSubscriptionPlan: (action: "create" | "update", plan: SubscriptionPlan) => void;
   manageAdCampaign: (action: "create" | "update", campaign: AdCampaign) => void;
   saveUsers: (users: User[]) => void;
+  
+  // Syllabus & Test history additions
+  syllabusList: SyllabusItem[];
+  testHistory: TestAttempt[];
+  addSyllabusTopic: (item: Omit<SyllabusItem, "id" | "createdAt">) => void;
+  deleteSyllabusTopic: (id: string) => void;
+  addTestAttemptRecord: (attempt: Omit<TestAttempt, "id" | "timestamp">) => void;
 }
 
 const DemoContext = createContext<DemoContextType | undefined>(undefined);
@@ -120,6 +130,10 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  
+  // Syllabus and Test History states
+  const [syllabusList, setSyllabusList] = useState<SyllabusItem[]>([]);
+  const [testHistory, setTestHistory] = useState<TestAttempt[]>([]);
 
   // Fetch all backend data
   const refreshBackendState = async () => {
@@ -199,6 +213,8 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Sync local cart and wishlist from client localStorage
       setCart(storage.getCart());
       setWishlist(storage.getWishlist());
+      setSyllabusList(storage.getSyllabus());
+      setTestHistory(storage.getTestHistory());
       
       // Load plans/ads as fallback mocks for now
       setSubscriptionPlans(storage.getSubscriptionPlans());
@@ -405,6 +421,52 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     toast.success("Profile updated successfully!");
   };
 
+  const updateAvatar = async (avatarUrl: string): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/auth/me", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatarUrl }),
+      });
+      if (res.ok) {
+        await refreshBackendState();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.error("Failed to update avatar:", e);
+      return false;
+    }
+  };
+
+  // Syllabus & Test history implementations
+  const addSyllabusTopic = (item: Omit<SyllabusItem, "id" | "createdAt">) => {
+    const newItem: SyllabusItem = {
+      ...item,
+      id: "syl-" + Date.now(),
+      createdAt: new Date().toISOString(),
+    };
+    storage.addSyllabus(newItem);
+    setSyllabusList(storage.getSyllabus());
+    toast.success(`Successfully uploaded syllabus topic for ${item.subject}!`);
+  };
+
+  const deleteSyllabusTopic = (id: string) => {
+    storage.deleteSyllabus(id);
+    setSyllabusList(storage.getSyllabus());
+    toast.success("Deleted syllabus topic.");
+  };
+
+  const addTestAttemptRecord = (attempt: Omit<TestAttempt, "id" | "timestamp">) => {
+    const newAttempt: TestAttempt = {
+      ...attempt,
+      id: "attempt-" + Date.now(),
+      timestamp: new Date().toISOString(),
+    };
+    storage.addTestAttempt(newAttempt);
+    setTestHistory(storage.getTestHistory());
+  };
+
   // Dealer Submit Material
   const submitMaterial = async (
     materialData: Omit<
@@ -561,6 +623,8 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         cart,
         wishlist,
         auditLogs,
+        syllabusList,
+        testHistory,
         
         login,
         logout,
@@ -580,6 +644,10 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         createTicket,
         replyToTicket,
         updateProfile,
+        updateAvatar,
+        addSyllabusTopic,
+        deleteSyllabusTopic,
+        addTestAttemptRecord,
         
         submitMaterial,
         updateMaterial,

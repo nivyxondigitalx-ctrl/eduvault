@@ -91,27 +91,14 @@ function LoginContent() {
 
       {/* Top Brand */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        {/* App Icon */}
-        <div className="flex justify-center mb-5">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-2xl opacity-20 blur-lg group-hover:opacity-40 transition-opacity duration-300" />
-            <Image
-              src="/eduvault-icon.png"
-              alt="EduVault Icon"
-              width={72}
-              height={72}
-              className="relative rounded-2xl shadow-xl shadow-indigo-200/50 dark:shadow-indigo-900/30 ring-1 ring-indigo-100 dark:ring-indigo-900/50"
-              priority
-            />
-          </div>
-        </div>
+
 
         <AppLogo className="justify-center mb-4" />
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-zinc-50 tracking-tight">
           Sign in to your account
         </h2>
         <p className="mt-2 text-xs text-slate-500 dark:text-zinc-400">
-          Access your personalized EduVault dashboard
+          Access your personalized KalviNest dashboard
         </p>
       </div>
 
@@ -124,11 +111,7 @@ function LoginContent() {
               <button
                 key={r}
                 onClick={() => setRole(r)}
-                className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
-                  role === r
-                    ? "bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                    : "text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200"
-                }`}
+                className="flex-1 py-2 text-xs font-bold rounded-xl transition-all"
               >
                 {r.charAt(0).toUpperCase() + r.slice(1)}
               </button>
@@ -174,7 +157,7 @@ function LoginContent() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={`e.g. ${role}@eduvault.com`}
+                  placeholder={`e.g. ${role}@kalvinest.com`}
                   className="block w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-zinc-800 border-0 focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-zinc-50 placeholder-slate-400 dark:placeholder-zinc-500 text-sm rounded-xl"
                 />
               </div>
@@ -227,56 +210,14 @@ function LoginContent() {
           {/* Registration reminder */}
           <div className="mt-6 text-center">
             <p className="text-xs text-slate-500 dark:text-zinc-400">
-              New to EduVault?{" "}
+              New to KalviNest?{" "}
               <Link href="/register" className="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">
                 Register as Student
               </Link>
             </p>
           </div>
 
-          {/* Quick Demo Credentials Assistant */}
-          <div className="mt-6 pt-5 border-t border-slate-100 dark:border-zinc-800">
-            <div className="text-center mb-3">
-              <span className="text-[11px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
-                Quick Demo Fill
-              </span>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setRole("admin");
-                  setEmail("sanjay@gmail.com");
-                  setPassword("password123");
-                }}
-                className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"
-              >
-                🔑 Admin
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRole("dealer");
-                  setEmail("bala@gmail.com");
-                  setPassword("password123");
-                }}
-                className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"
-              >
-                💼 Dealer
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRole("student");
-                  setEmail("nivas@gmail.com");
-                  setPassword("password123");
-                }}
-                className="py-1.5 px-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors text-center"
-              >
-                🎓 Student
-              </button>
-            </div>
-          </div>
+
 
         </div>
       </div>

@@ -182,8 +182,6 @@ async function main() {
   }
   console.log("Seeded dealer profiles.");
 
-  // 6. Seed Materials
-  /*
   for (const m of MOCK_MATERIALS) {
     await prisma.material.create({
       data: {
@@ -224,11 +222,8 @@ async function main() {
       },
     });
   }
-  */
-  console.log("Skipped seeding mock materials.");
+  console.log("Seeded mock materials.");
 
-  // 7. Seed Reviews
-  /*
   for (const r of MOCK_REVIEWS) {
     await prisma.review.create({
       data: {
@@ -241,11 +236,8 @@ async function main() {
       },
     });
   }
-  */
-  console.log("Skipped seeding mock reviews.");
+  console.log("Seeded mock reviews.");
 
-  // 8. Seed Orders
-  /*
   for (const o of MOCK_ORDERS) {
     const order = await prisma.order.create({
       data: {
@@ -273,11 +265,8 @@ async function main() {
       });
     }
   }
-  */
-  console.log("Skipped seeding mock orders & items.");
+  console.log("Seeded mock orders & items.");
 
-  // 9. Seed Ledger Entries
-  /*
   for (const l of MOCK_LEDGER) {
     await prisma.ledgerEntry.create({
       data: {
@@ -291,11 +280,8 @@ async function main() {
       },
     });
   }
-  */
-  console.log("Skipped seeding mock ledger entries.");
+  console.log("Seeded mock ledger entries.");
 
-  // 10. Seed Payouts
-  /*
   for (const p of MOCK_PAYOUTS) {
     await prisma.payout.create({
       data: {
@@ -310,8 +296,7 @@ async function main() {
       },
     });
   }
-  */
-  console.log("Skipped seeding mock payouts.");
+  console.log("Seeded mock payouts.");
 
   // 11. Seed Notifications
   for (const n of MOCK_NOTIFICATIONS) {

@@ -121,14 +121,14 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({
             {/* Watermark diagonal text overlay */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden select-none opacity-[0.03] dark:opacity-[0.02]">
               <div className="text-7xl font-bold tracking-widest uppercase transform -rotate-45">
-                EduVault Preview
+                KalviNest Preview
               </div>
             </div>
 
             {/* Simulated Academic content text */}
             <div className="flex justify-between items-center border-b border-slate-100 dark:border-zinc-800 pb-3 mb-4">
               <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">
-                EduVault Certified Notes
+                KalviNest Certified Notes
               </span>
               <span className="text-[9px] text-slate-400 dark:text-zinc-500 font-mono">
                 Page {currentPage} of {totalPageCount}
@@ -183,7 +183,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({
 
             <div className="mt-auto border-t border-slate-100 dark:border-zinc-800 pt-3 flex justify-between items-center text-[9px] text-slate-400 dark:text-zinc-500">
               <span>Verified Academy Content Provider</span>
-              <span>EduVault Marketplace</span>
+              <span>KalviNest Marketplace</span>
             </div>
 
           </div>

@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EduVault - University & College Study Material Marketplace",
+  title: "KalviNest - University & College Study Material Marketplace",
   description: "Discover and download notes, question papers, and study material organized by university, college, course, and semester.",
 };
 
