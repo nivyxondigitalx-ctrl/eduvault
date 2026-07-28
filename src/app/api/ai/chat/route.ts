@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 import { getSessionUser } from "../../../../lib/auth";
+import { promises as fs } from "fs";
+import path from "path";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,6 +35,31 @@ export async function POST(req: NextRequest) {
 
     const role = user?.role || "guest";
     const userName = user?.name || "Guest";
+
+    // Direct command handler for deleting a material (triggered by click or chat)
+    if (role === "dealer" && dealer && message.startsWith("/delete-material ")) {
+      const targetId = message.substring("/delete-material ".length).trim();
+      const deletionResult = await deleteMaterialHelper(targetId, dealer.id);
+
+      // Fetch updated materials list
+      const updatedMaterials = await prisma.material.findMany({
+        where: { dealerId: dealer.id },
+        select: { id: true, title: true, status: true, price: true, downloadCount: true },
+      });
+
+      return NextResponse.json({
+        content: deletionResult.message,
+        data: {
+          role: "dealer",
+          earnings: {
+            totalSales: dealer.totalSales,
+            netEarnings: dealer.netEarnings,
+            availableBalance: dealer.availableBalance,
+          },
+          materials: updatedMaterials.slice(0, 5),
+        }
+      });
+    }
 
     // 2. Fetch relevant database context based on role to ground the AI
     let dbContext = "";
@@ -186,7 +213,8 @@ Guidelines:
    - Specific materials: [/material/SLUG](/material/SLUG)
 4. Highlight real-time data provided in the context above (e.g. payout balance, pending counts, or search results) to show you are integrated.
 5. If students search for materials, list matching items with direct markdown links: [Title](/material/slug) and mention details.
-6. Keep responses formatting clean and readable using lists, bold text, or tables. Make it brief.`;
+6. Keep responses formatting clean and readable using lists, bold text, or tables. Make it brief.
+7. If the user is a dealer and asks to delete one of their uploaded PDF materials, you can trigger deletion on their behalf by outputting the exact tag \`[DELETE_MATERIAL: <id>]\` in your response (replacing <id> with the actual material ID from the context). Ensure you explain to them that the file is being deleted.`;
 
       // Map chat history to Gemini API formats
       const contents = history.map((h: any) => ({
@@ -220,8 +248,23 @@ Guidelines:
 
       if (response.ok) {
         const data = await response.json();
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        let aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (aiText) {
+          // Process database deletion if Gemini triggers it
+          const deleteMatch = aiText.match(/\[DELETE_MATERIAL:\s*([a-zA-Z0-9-]+)\]/);
+          if (deleteMatch && role === "dealer" && dealer) {
+            const targetId = deleteMatch[1];
+            const deletionResult = await deleteMaterialHelper(targetId, dealer.id);
+            aiText = aiText.replace(deleteMatch[0], `\n\n*System Update: ${deletionResult.message}*`);
+            
+            // Refresh dealer materials
+            const updatedMaterials = await prisma.material.findMany({
+              where: { dealerId: dealer.id },
+              select: { id: true, title: true, status: true, price: true, downloadCount: true },
+            });
+            dataPayload.materials = updatedMaterials.slice(0, 5);
+          }
+
           return NextResponse.json({
             content: aiText,
             data: dataPayload,
@@ -285,6 +328,34 @@ Guidelines:
           `1. Go to the [Upload Study Material](/dealer/upload) section.\n` +
           `2. Fill in the syllabus details (University, College, Course, Semester, Subject).\n` +
           `3. Upload the study material PDF and set a price (or make it free).\n\n*Note: All uploads are moderated and approved by the admin team before they appear in the student search.*`;
+      } else if (cleanMsg.includes("delete") || cleanMsg.includes("remove")) {
+        let targetId = "";
+        const dealerMaterials = await prisma.material.findMany({
+          where: { dealerId: dealer.id },
+        });
+        
+        const matchedMat = dealerMaterials.find(m => 
+          cleanMsg.includes(m.title.toLowerCase()) || 
+          cleanMsg.includes(m.id.toLowerCase())
+        );
+
+        if (matchedMat) {
+          targetId = matchedMat.id;
+        }
+
+        if (targetId) {
+          const deletionResult = await deleteMaterialHelper(targetId, dealer.id);
+          reply = deletionResult.message;
+          
+          // Refresh list
+          const updatedMaterials = await prisma.material.findMany({
+            where: { dealerId: dealer.id },
+            select: { id: true, title: true, status: true, price: true, downloadCount: true },
+          });
+          dataPayload.materials = updatedMaterials.slice(0, 5);
+        } else {
+          reply = `I couldn't identify which material you want to delete. Please specify the exact title of the notes you wish to delete, or click the delete trash icon next to the material in your list below.`;
+        }
       } else {
         reply = `Hello **${userName}**! I am your Dealer Assistant. I can help manage your earnings and uploads. Try asking:
 - *"What is my current balance?"*
@@ -324,5 +395,53 @@ Guidelines:
   } catch (error: any) {
     console.error("AI Chat route error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+async function deleteMaterialHelper(materialId: string, dealerId: string) {
+  try {
+    const material = await prisma.material.findUnique({
+      where: { id: materialId },
+    });
+
+    if (!material) {
+      return { success: false, message: "Material not found." };
+    }
+
+    if (material.dealerId !== dealerId) {
+      return { success: false, message: "Unauthorized: You do not own this material." };
+    }
+
+    // Delete the file from database & local/tmp cache
+    const filename = material.filePath.replace("/uploads/", "");
+    
+    // 1. Delete from SystemError table (database backup)
+    try {
+      await prisma.systemError.deleteMany({
+        where: { message: `upload:${filename}` },
+      });
+    } catch (e: any) {
+      console.error("Failed to delete database file backup:", e.message);
+    }
+
+    // 2. Delete local files
+    try {
+      const localPath = path.join(process.cwd(), "public", "uploads", filename);
+      await fs.unlink(localPath);
+    } catch (e) {}
+    try {
+      const tmpPath = path.join("/tmp", "uploads", filename);
+      await fs.unlink(tmpPath);
+    } catch (e) {}
+
+    // 3. Delete from Material table
+    await prisma.material.delete({
+      where: { id: materialId },
+    });
+
+    return { success: true, message: `Successfully deleted study material "${material.title}".` };
+  } catch (err: any) {
+    console.error("Deletion helper error:", err);
+    return { success: false, message: `Failed to delete material: ${err.message}` };
   }
 }

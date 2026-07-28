@@ -271,6 +271,47 @@ export function AiChatbot() {
 
     // 3. Material Carousel/Lists for Students or General search
     if (msgData.materials && msgData.materials.length > 0) {
+      if (msgData.role === "dealer") {
+        return (
+          <div className="mt-3 space-y-2">
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold block">YOUR UPLOADED MATERIALS:</span>
+            <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-thin max-w-full">
+              {msgData.materials.map((mat: any) => (
+                <div
+                  key={mat.id}
+                  className="flex-shrink-0 w-[180px] p-2.5 bg-white dark:bg-zinc-800 border border-slate-100 dark:border-zinc-700/60 rounded-xl flex flex-col justify-between shadow-sm hover:border-emerald-400 transition"
+                >
+                  <div>
+                    <div className="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5">
+                      {mat.status}
+                    </div>
+                    <div className="text-[11px] font-bold text-slate-700 dark:text-zinc-200 line-clamp-2 leading-tight mb-2 h-7">{mat.title}</div>
+                  </div>
+                  <div className="flex items-center justify-between mt-1 pt-1.5 border-t border-slate-50 dark:border-zinc-700/40">
+                    <span className="text-[10px] text-slate-400">
+                      {mat.downloadCount} downloads
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => {
+                          if (confirm(`Are you sure you want to delete "${mat.title}"?`)) {
+                            handleSend(`/delete-material ${mat.id}`);
+                          }
+                        }}
+                        className="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded transition cursor-pointer"
+                        title="Delete Material"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="mt-3 space-y-2">
           <span className="text-[11px] text-slate-400 font-bold block">RECOMMENDED SYLLABUS PAPERS:</span>
