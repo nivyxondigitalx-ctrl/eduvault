@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { prisma } from "../../../lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,6 +36,20 @@ export async function POST(req: NextRequest) {
       await fs.mkdir(uploadDir, { recursive: true });
       filePath = path.join(uploadDir, filename);
       await fs.writeFile(filePath, buffer);
+    }
+
+    // Save copy to Postgres (SystemError table) to persist on serverless platforms
+    try {
+      await prisma.systemError.create({
+        data: {
+          message: `upload:${filename}`,
+          stack: buffer.toString("base64"),
+          url: file.type || "application/octet-stream",
+          resolved: true,
+        },
+      });
+    } catch (dbError: any) {
+      console.error("Database file backup failed:", dbError.message);
     }
 
     return NextResponse.json({

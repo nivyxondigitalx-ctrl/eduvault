@@ -35,6 +35,13 @@ export async function GET(req: NextRequest) {
     }
 
     const errors = await prisma.systemError.findMany({
+      where: {
+        NOT: {
+          message: {
+            startsWith: "upload:",
+          },
+        },
+      },
       orderBy: { createdAt: "desc" },
     });
 

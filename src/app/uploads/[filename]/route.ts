@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { prisma } from "../../../lib/prisma";
 
 export async function GET(
   req: NextRequest,
@@ -27,6 +28,30 @@ export async function GET(
         fileBuffer = await fs.readFile(filePath);
       } catch (e2) {
         // Not found in either
+      }
+    }
+
+    // If not found locally, try Postgres database (SystemError table)
+    if (!fileBuffer) {
+      try {
+        const dbFile = await prisma.systemError.findFirst({
+          where: { message: `upload:${filename}` },
+        });
+
+        if (dbFile && dbFile.stack) {
+          fileBuffer = Buffer.from(dbFile.stack, "base64");
+          
+          // Write it to /tmp/uploads cache so subsequent requests on this instance are fast
+          try {
+            const cacheDir = path.join("/tmp", "uploads");
+            await fs.mkdir(cacheDir, { recursive: true });
+            await fs.writeFile(path.join(cacheDir, filename), fileBuffer);
+          } catch (cacheErr: any) {
+            console.warn("Failed to save retrieved database file to /tmp cache:", cacheErr.message);
+          }
+        }
+      } catch (dbError: any) {
+        console.error("Database file retrieval failed:", dbError.message);
       }
     }
 
