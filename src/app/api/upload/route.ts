@@ -17,13 +17,25 @@ export async function POST(req: NextRequest) {
     // Create a safe, unique filename
     const sanitizedOriginalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const filename = `${Date.now()}-${sanitizedOriginalName}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    let uploadDir = path.join(process.cwd(), "public", "uploads");
+    let filePath = path.join(uploadDir, filename);
+    let writeSuccessful = false;
 
-    // Ensure the uploads directory exists
-    await fs.mkdir(uploadDir, { recursive: true });
+    try {
+      // Ensure the uploads directory exists
+      await fs.mkdir(uploadDir, { recursive: true });
+      await fs.writeFile(filePath, buffer);
+      writeSuccessful = true;
+    } catch (e: any) {
+      console.warn("Failed to write to public/uploads, falling back to /tmp/uploads:", e.message);
+    }
 
-    const filePath = path.join(uploadDir, filename);
-    await fs.writeFile(filePath, buffer);
+    if (!writeSuccessful) {
+      uploadDir = path.join("/tmp", "uploads");
+      await fs.mkdir(uploadDir, { recursive: true });
+      filePath = path.join(uploadDir, filename);
+      await fs.writeFile(filePath, buffer);
+    }
 
     return NextResponse.json({
       success: true,
