@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse, NextRequest, after } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { prisma } from "../../../lib/prisma";
@@ -38,18 +38,25 @@ export async function POST(req: NextRequest) {
       await fs.writeFile(filePath, buffer);
     }
 
-    // Save copy to Postgres (SystemError table) to persist on serverless platforms
-    try {
-      await prisma.systemError.create({
-        data: {
-          message: `upload:${filename}`,
-          stack: buffer.toString("base64"),
-          url: file.type || "application/octet-stream",
-          resolved: true,
-        },
+    // Save copy to Postgres (SystemError table) to persist on serverless platforms in background
+    if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+      after(async () => {
+        try {
+          await prisma.systemError.create({
+            data: {
+              message: `upload:${filename}`,
+              stack: buffer.toString("base64"),
+              url: file.type || "application/octet-stream",
+              resolved: true,
+            },
+          });
+          console.log(`Successfully backed up ${filename} to database in background.`);
+        } catch (dbError: any) {
+          console.error("Database file backup failed in background:", dbError.message);
+        }
       });
-    } catch (dbError: any) {
-      console.error("Database file backup failed:", dbError.message);
+    } else {
+      console.log("Skipping database file backup in local development.");
     }
 
     return NextResponse.json({
@@ -63,3 +70,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
