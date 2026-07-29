@@ -125,6 +125,13 @@ export default function NewMaterialPage() {
       return;
     }
 
+    // Vercel serverless functions limit request body size to 4.5 MB
+    const MAX_SIZE_BYTES = 4.5 * 1024 * 1024;
+    if (file.size > MAX_SIZE_BYTES) {
+      toast.error(`File is too large (${(file.size / (1024 * 1024)).toFixed(2)} MB). Maximum allowed size is 4.5 MB on Vercel serverless platform.`);
+      return;
+    }
+
     setFileUploading(true);
     setUploadProgress(15);
     setFileName(file.name);
@@ -141,9 +148,26 @@ export default function NewMaterialPage() {
       });
 
       setUploadProgress(85);
+
+      if (!res.ok) {
+        let errorMessage = "Failed to upload file.";
+        if (res.status === 413) {
+          errorMessage = "File size exceeds serverless limits (4.5 MB max). Please compress the PDF.";
+        } else {
+          try {
+            const text = await res.text();
+            const data = JSON.parse(text);
+            errorMessage = data.error || errorMessage;
+          } catch {
+            errorMessage = res.statusText || errorMessage;
+          }
+        }
+        throw new Error(errorMessage);
+      }
+
       const data = await res.json();
 
-      if (res.ok && data.success) {
+      if (data.success) {
         setFilePath(data.filePath);
         setFileSize(data.fileSize);
         setUploadProgress(100);
